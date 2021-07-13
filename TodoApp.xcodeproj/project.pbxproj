@@ -13,8 +13,6 @@
 		0831B58A269A35F500964905 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0831B588269A35F500964905 /* Main.storyboard */; };
 		0831B58C269A35F700964905 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0831B58B269A35F700964905 /* Assets.xcassets */; };
 		0831B58F269A35F700964905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0831B58D269A35F700964905 /* LaunchScreen.storyboard */; };
-		0831B5A3269A3B5B00964905 /* LoginPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0831B5A2269A3B5B00964905 /* LoginPresenter.swift */; };
-		0831B5A5269A3B7200964905 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0831B5A4269A3B7200964905 /* LoginRouter.swift */; };
 		0831B5A8269A3D7E00964905 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0831B5A7269A3D7E00964905 /* UIViewExtensions.swift */; };
 		0831B5AA269A404300964905 /* UIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0831B5A9269A404300964905 /* UIFontExtensions.swift */; };
 		0831B5AD269A42D900964905 /* CCButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0831B5AC269A42D900964905 /* CCButton.swift */; };
@@ -30,8 +28,6 @@
 		0831B58B269A35F700964905 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0831B58E269A35F700964905 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0831B590269A35F700964905 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0831B5A2269A3B5B00964905 /* LoginPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPresenter.swift; sourceTree = "<group>"; };
-		0831B5A4269A3B7200964905 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		0831B5A7269A3D7E00964905 /* UIViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
 		0831B5A9269A404300964905 /* UIFontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontExtensions.swift; sourceTree = "<group>"; };
 		0831B5AC269A42D900964905 /* CCButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCButton.swift; sourceTree = "<group>"; };
@@ -130,8 +126,6 @@
 			isa = PBXGroup;
 			children = (
 				0831B586269A35F500964905 /* LoginViewController.swift */,
-				0831B5A2269A3B5B00964905 /* LoginPresenter.swift */,
-				0831B5A4269A3B7200964905 /* LoginRouter.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -243,13 +237,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0831B5A3269A3B5B00964905 /* LoginPresenter.swift in Sources */,
 				0831B587269A35F500964905 /* LoginViewController.swift in Sources */,
 				0831B5AA269A404300964905 /* UIFontExtensions.swift in Sources */,
 				0831B5AD269A42D900964905 /* CCButton.swift in Sources */,
 				0831B5AF269A4BDF00964905 /* CCMargin.swift in Sources */,
 				0831B583269A35F500964905 /* AppDelegate.swift in Sources */,
-				0831B5A5269A3B7200964905 /* LoginRouter.swift in Sources */,
 				0831B5A8269A3D7E00964905 /* UIViewExtensions.swift in Sources */,
 				0831B585269A35F500964905 /* SceneDelegate.swift in Sources */,
 			);

@@ -6,9 +6,10 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class LoginViewController: UIViewController {
-
+    
     private lazy var welcomeLabel: UILabel = {
         let label: UILabel = UILabel()
         
@@ -33,15 +34,11 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    private func loginButtonPressed() {
-        
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
-
+    
     private func setupView() {
         view.addSubview(welcomeLabel)
         view.addSubview(loginButton)
@@ -58,6 +55,37 @@ class LoginViewController: UIViewController {
             loginButton.leadingAnchor.constraint(equalTo: view.availableGuide.leadingAnchor, constant: CCMargin.xx_large),
             loginButton.trailingAnchor.constraint(equalTo: view.availableGuide.trailingAnchor, constant: -CCMargin.xx_large)
         ])
+    }
+    
+    private func loginButtonPressed() {
+        let context = LAContext()
+        var error: NSError?
+        
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Please enable Face ID/ Touch ID from device settings."
+            
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { [weak self] success, authenticationError in
+                DispatchQueue.main.async {
+                    if success {
+                        self?.authenticationSuccessfully()
+                    } else {
+                        self?.authenticationError(with: "Unable to login", message: "Is this you? Please try again")
+                    }
+                }
+            }
+        } else {
+            authenticationError(with: "Unable to login", message: "Your device unable to use biometric authentication")
+        }
+    }
+    
+    private func authenticationError(with title: String, message: String) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(ac, animated: true)
+    }
+    
+    private func authenticationSuccessfully() {
+        print("success")
     }
 }
 
