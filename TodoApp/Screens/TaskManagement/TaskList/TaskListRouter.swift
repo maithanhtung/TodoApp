@@ -24,7 +24,7 @@ class TaskListRouter: NSObject, TaskListRouterProtocol {
 
     var navigationController: UINavigationController?
     
-    required init(navigationController: UINavigationController?) {
+    required init(navigationController: UINavigationController? = .none) {
         self.navigationController = navigationController
         super.init()
     }
@@ -47,4 +47,11 @@ class TaskListRouter: NSObject, TaskListRouterProtocol {
 
 // MARK: - TaskListPresenter delegate
 extension TaskListRouter: TaskListPresenterDelegate {
+    func openTaskDetail(with taskId: String) {
+        // To be implement
+    }
+    
+    func openAddTaskForm() {
+        // To be implement
+    }
 }

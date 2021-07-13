@@ -20,7 +20,7 @@ class CCButton: UIButton {
         super.layoutSubviews()
         layer.cornerRadius = bounds.height / 2
         titleLabel?.textAlignment = .center
-        titleLabel?.font = UIFont.buttonTextFont
+        titleLabel?.font = CCFont.buttonTextFont
         contentEdgeInsets = UIEdgeInsets(top: kButtonPaddingTopBottom, left: kButtonPaddingLeftRight,
                                          bottom: kButtonPaddingTopBottom, right: kButtonPaddingLeftRight)
         let minimumWidthConstraint: NSLayoutConstraint = widthAnchor.constraint(greaterThanOrEqualToConstant: kButtonMinimumWidth)
@@ -39,7 +39,6 @@ class CCButton: UIButton {
     }
 
     private func basicInit() {
-        setBackgroundColor(.systemBlue, for: .normal)
         addTarget(self, action: #selector(touchUpSelector(_:)), for: .touchUpInside)
     }
     
@@ -47,7 +46,7 @@ class CCButton: UIButton {
         actionHandler?(sender)
     }
     
-    private func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
+    func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
         UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
 
         if let graphicsContext = UIGraphicsGetCurrentContext() {
