@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .systemBlue
         label.textAlignment = .center
-        label.font = UIFont.welcomeTextFont
+        label.font = CCFont.welcomeTextFont
         
         return label
     }()
@@ -25,7 +25,8 @@ class LoginViewController: UIViewController {
     private lazy var loginButton: CCButton = {
         let button: CCButton = CCButton()
         
-        button.setTitle("Login", for: UIControl.State.normal)
+        button.setTitle("Login", for: .normal)
+        button.setBackgroundColor(.systemBlue, for: .normal)
         button.actionHandler = { _ in
             self.loginButtonPressed()
         }
@@ -85,7 +86,14 @@ class LoginViewController: UIViewController {
     }
     
     private func authenticationSuccessfully() {
-        print("success")
+        let router = TaskListRouter()
+        let rootVC: UIViewController = router.createViewController()
+        let rootNav: UINavigationController = UINavigationController(rootViewController: rootVC)
+        
+        router.navigationController = rootNav
+        rootNav.modalPresentationStyle = .fullScreen
+        
+        present(rootNav, animated: false, completion: nil)
     }
 }
 
