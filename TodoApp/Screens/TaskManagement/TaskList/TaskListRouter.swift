@@ -51,6 +51,10 @@ extension TaskListRouter: TaskListPresenterDelegate {
         // To be implement
     }
     
+    func logout() {
+        // To be implement
+    }
+    
     func openAddTaskForm() {
         // To be implement
     }
