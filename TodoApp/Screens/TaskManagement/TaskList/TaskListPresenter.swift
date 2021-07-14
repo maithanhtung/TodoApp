@@ -11,6 +11,8 @@ import Foundation
 protocol TaskListPresenterDelegate: AnyObject {
     func openAddTaskForm()
     
+    func logout()
+    
     func openTaskDetail(with taskId: String)
 }
 
@@ -26,9 +28,11 @@ protocol TaskListPresenterProtocol: NSObject {
     
     func addTask()
     
+    func logout()
+    
     func numberOfItem(section: Int) -> Int
     
-    func taskItem(at indexPath: IndexPath) -> Task
+    func taskItem(at indexPath: IndexPath) -> Task?
     
     func didSelectItem(at indexPath: IndexPath)
 }
@@ -52,34 +56,48 @@ class TaskListPresenter: NSObject, TaskListPresenterProtocol {
     }
     
     func viewIsReady() {
-        viewController?.refreshView()
+        interactor.fetchTaskList()
     }
     
     func addTask() {
         delegate.openAddTaskForm()
     }
     
-    func numberOfItem(section: Int) -> Int {
-        return 2
+    func logout() {
+        delegate.logout()
     }
     
-    func taskItem(at indexPath: IndexPath) -> Task {
-        return Task(id: "id 1", title: "LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOONG", description: "Description", dueDate: Date(), reminderText: "Reminder text")
+    func numberOfItem(section: Int) -> Int {
+        guard let list = taskList?.tasks, section == 0 else {
+            return 0
+        }
+        return list.count
+    }
+    
+    func taskItem(at indexPath: IndexPath) -> Task? {
+        guard let list = taskList?.tasks, list.count > indexPath.row, indexPath.section == 0 else {
+            return nil
+        }
+        return list[indexPath.row]
     }
     
     func didSelectItem(at indexPath: IndexPath) {
-        let task: Task = taskItem(at: indexPath)
-        delegate.openTaskDetail(with: task.id)
+        if let task = taskItem(at: indexPath) {
+            delegate.openTaskDetail(with: task.id)
+        }
     }
     
 }
 
 // MARK: - TaskListInteractor delegate
 extension TaskListPresenter: TaskListInteractorDelegate {
-    func taskListFetchSucceeded() {
+    func taskListFetchSucceeded(with list: TaskList) {
+        taskList = list
+        viewController?.refreshView()
     }
     
     func taskListFetchFailed() {
+        // show error
     }
 }
 

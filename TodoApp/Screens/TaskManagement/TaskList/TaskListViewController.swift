@@ -89,7 +89,7 @@ class TaskListViewController: UIViewController {
     }
     
     @objc func logoutButtonPressed() {
-        presenter.addTask()
+        presenter.logout()
     }
 }
 
@@ -103,13 +103,13 @@ extension TaskListViewController: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CCCell", for: indexPath) as! CCCell
         
-        let item: Task = presenter.taskItem(at: indexPath)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/YY"
-        
-        cell.title = dateFormatter.string(from: item.dueDate)
-        cell.subTitle = item.title
+        if let item = presenter.taskItem(at: indexPath) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/YY"
+            
+            cell.title = dateFormatter.string(from: item.dueDate)
+            cell.subTitle = item.title
+        }
         
         return cell
     }
