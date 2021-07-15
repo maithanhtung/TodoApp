@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct TaskList {
+struct TaskList: Codable {
     var tasks: [Task]
 }
