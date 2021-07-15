@@ -30,21 +30,17 @@ class CCCellView: UIView {
         }
     }
     
-    private lazy var titleLabel: UILabel = {
-        let label: UILabel = UILabel()
+    private lazy var titleLabel: CCLabel = {
+        let label: CCLabel = CCLabel()
         label.font = CCFont.titleFont
-        label.textAlignment = .left
-        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
     }()
 
-    private lazy var subTitleLabel: UILabel = {
-        let label: UILabel = UILabel()
+    private lazy var subTitleLabel: CCLabel = {
+        let label: CCLabel = CCLabel()
         label.font = CCFont.subTitleFont
-        label.textAlignment = .left
-        label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -52,7 +48,7 @@ class CCCellView: UIView {
 
     private lazy var iconImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
-        imageView.tintColor = .black
+        imageView.tintColor = UIColor(named: "chevronTintColor")
         imageView.image = UIImage(named: "chevron")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -60,8 +56,7 @@ class CCCellView: UIView {
     
     
     private func setupView() {
-        layer.cornerRadius = 10
-        backgroundColor = .systemBlue
+        backgroundColor = UIColor(named: "cellBackgroundColor")
 
         addSubview(iconImageView)
         addSubview(titleLabel)
@@ -83,8 +78,8 @@ class CCCellView: UIView {
             iconImageView.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.large),
             iconImageView.leadingAnchor.constraint(greaterThanOrEqualTo: subTitleLabel.trailingAnchor, constant: CCMargin.large),
             iconImageView.centerYAnchor.constraint(equalTo: availableGuide.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.heightAnchor.constraint(equalToConstant: 30),
+            iconImageView.widthAnchor.constraint(equalToConstant: 10),
+            iconImageView.heightAnchor.constraint(equalToConstant: 10),
         ])
         
         let titleLabelBottomAnchor: NSLayoutConstraint = titleLabel.bottomAnchor.constraint(equalTo: availableGuide.centerYAnchor, constant: -CCMargin.small)

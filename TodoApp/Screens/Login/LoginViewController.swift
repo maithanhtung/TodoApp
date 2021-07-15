@@ -10,12 +10,12 @@ import LocalAuthentication
 
 class LoginViewController: UIViewController {
     
-    private lazy var welcomeLabel: UILabel = {
-        let label: UILabel = UILabel()
+    private lazy var welcomeLabel: CCLabel = {
+        let label: CCLabel = CCLabel()
         
         label.text = "Todo App"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .systemBlue
+        label.textColor = UIColor(named: "welcomeTextColor")
         label.textAlignment = .center
         label.font = CCFont.welcomeTextFont
         
@@ -27,8 +27,8 @@ class LoginViewController: UIViewController {
         
         button.setTitle("Login", for: .normal)
         button.setBackgroundColor(.systemBlue, for: .normal)
-        button.actionHandler = { _ in
-            self.loginButtonPressed()
+        button.actionHandler = { [weak self] _ in
+            self?.loginButtonPressed()
         }
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -41,6 +41,7 @@ class LoginViewController: UIViewController {
     }
     
     private func setupView() {
+        view.backgroundColor = UIColor(named: "viewBackgroundColor")
         view.addSubview(welcomeLabel)
         view.addSubview(loginButton)
         

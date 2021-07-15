@@ -42,6 +42,7 @@ class CCCell: UICollectionViewCell {
         contentView.addSubview(innerView)
         innerView.translatesAutoresizingMaskIntoConstraints = false
         
+        innerView.layer.cornerRadius = 10
         let screenRect = UIScreen.main.bounds
         let innerViewWidth = screenRect.size.width - CCMargin.large*2
         let innerViewHeight = innerViewWidth/3

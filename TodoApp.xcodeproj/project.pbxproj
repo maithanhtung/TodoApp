@@ -32,6 +32,9 @@
 		084F195A269F4B87002606BE /* TaskFormInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F1959269F4B87002606BE /* TaskFormInteractor.swift */; };
 		084F195C269F4B92002606BE /* TaskFormRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F195B269F4B92002606BE /* TaskFormRouter.swift */; };
 		084F195E269F4BA4002606BE /* TaskFormPresenterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F195D269F4BA4002606BE /* TaskFormPresenterTest.swift */; };
+		084F1960269F4F5E002606BE /* CCInputFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F195F269F4F5E002606BE /* CCInputFieldView.swift */; };
+		084F1964269F6B89002606BE /* CCTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F1963269F6B89002606BE /* CCTextField.swift */; };
+		084F196626A02E02002606BE /* CCLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F196526A02E02002606BE /* CCLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +77,9 @@
 		084F1959269F4B87002606BE /* TaskFormInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFormInteractor.swift; sourceTree = "<group>"; };
 		084F195B269F4B92002606BE /* TaskFormRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFormRouter.swift; sourceTree = "<group>"; };
 		084F195D269F4BA4002606BE /* TaskFormPresenterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFormPresenterTest.swift; sourceTree = "<group>"; };
+		084F195F269F4F5E002606BE /* CCInputFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCInputFieldView.swift; sourceTree = "<group>"; };
+		084F1963269F6B89002606BE /* CCTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCTextField.swift; sourceTree = "<group>"; };
+		084F196526A02E02002606BE /* CCLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +143,9 @@
 				0831B5AE269A4BDF00964905 /* CCMargin.swift */,
 				084F1933269E3369002606BE /* CCCell.swift */,
 				084F1935269E342F002606BE /* CCCellView.swift */,
+				084F195F269F4F5E002606BE /* CCInputFieldView.swift */,
+				084F1963269F6B89002606BE /* CCTextField.swift */,
+				084F196526A02E02002606BE /* CCLabel.swift */,
 			);
 			path = CommonComponents;
 			sourceTree = "<group>";
@@ -351,9 +360,12 @@
 				084F1958269F4B76002606BE /* TaskFormPresenter.swift in Sources */,
 				0831B5AD269A42D900964905 /* CCButton.swift in Sources */,
 				084F193C269E4472002606BE /* Task.swift in Sources */,
+				084F1960269F4F5E002606BE /* CCInputFieldView.swift in Sources */,
 				084F1934269E3369002606BE /* CCCell.swift in Sources */,
 				0831B5AF269A4BDF00964905 /* CCMargin.swift in Sources */,
 				0831B583269A35F500964905 /* AppDelegate.swift in Sources */,
+				084F196626A02E02002606BE /* CCLabel.swift in Sources */,
+				084F1964269F6B89002606BE /* CCTextField.swift in Sources */,
 				0831B5A8269A3D7E00964905 /* UIViewExtensions.swift in Sources */,
 				0831B585269A35F500964905 /* SceneDelegate.swift in Sources */,
 				084F1956269F4B67002606BE /* TaskFormViewController.swift in Sources */,
