@@ -13,36 +13,36 @@ enum TaskFormInputFields: Int, CaseIterable {
          reminderInput
 }
 
- // MARK: - TaskFormViewControllerProtocol declaration
- protocol TaskFormViewControllerProtocol: NSObject {
+// MARK: - TaskFormViewControllerProtocol declaration
+protocol TaskFormViewControllerProtocol: NSObject {
+    
+}
 
- }
-
- // MARK: - TaskFormViewController implementation
- class TaskFormViewController: UIViewController {
-
-     private let presenter: TaskFormPresenterProtocol
-
-     required init(presenter: TaskFormPresenterProtocol) {
-         self.presenter = presenter
-
-         super.init(nibName: .none, bundle: .none)
-
-         self.presenter.viewController = self
-     }
-
-     required init?(coder aDecoder: NSCoder) {
-         assertionFailure("init(coder:) has not been implemented")
-         return nil
-     }
-
-     override func viewDidLoad() {
-         super.viewDidLoad()
+// MARK: - TaskFormViewController implementation
+class TaskFormViewController: UIViewController {
+    
+    private let presenter: TaskFormPresenterProtocol
+    
+    required init(presenter: TaskFormPresenterProtocol) {
+        self.presenter = presenter
+        
+        super.init(nibName: .none, bundle: .none)
+        
+        self.presenter.viewController = self
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        assertionFailure("init(coder:) has not been implemented")
+        return nil
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         title = "Task Form"
         view.backgroundColor = UIColor(named: "viewBackgroundColor")
         edgesForExtendedLayout = .all
         setupView()
-     }
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -155,13 +155,13 @@ enum TaskFormInputFields: Int, CaseIterable {
         
         view.layoutIfNeeded()
     }
+    
+}
 
- }
-
- // MARK: - TaskFormViewControllerProtocol implementation
- extension TaskFormViewController: TaskFormViewControllerProtocol {
-
- }
+// MARK: - TaskFormViewControllerProtocol implementation
+extension TaskFormViewController: TaskFormViewControllerProtocol {
+    
+}
 
 // MARK: - UITextFieldDelegate implementation
 extension TaskFormViewController: UITextFieldDelegate {
