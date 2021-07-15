@@ -33,8 +33,8 @@ class TaskListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Manage your tasks"
-        navigationController?.navigationBar.barTintColor = .systemBackground
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "viewBackgroundColor")
+        navigationController?.navigationBar.barTintColor = UIColor(named: "viewBackgroundColor")
         setupView()
         presenter.viewIsReady()
     }
