@@ -56,6 +56,7 @@ class TaskListPresenter: NSObject, TaskListPresenterProtocol {
     }
     
     func viewIsReady() {
+        viewController?.showLoadingView()
         interactor.fetchTaskList()
     }
     
@@ -94,10 +95,13 @@ extension TaskListPresenter: TaskListInteractorDelegate {
     func taskListFetchSucceeded(with list: TaskList) {
         taskList = list
         viewController?.refreshView()
+        viewController?.dissmissLoadingView()
     }
     
-    func taskListFetchFailed() {
-        // show error
+    func taskListFetchFailed(with error: TDError) {
+        //TODO: implement show error to user
+        print(error.errorString)
+        viewController?.dissmissLoadingView()
     }
 }
 

@@ -7,19 +7,13 @@
 
 import UIKit
 
-enum TaskFormInputFields: Int, CaseIterable {
-    case titleInput = 0,
-         descInput,
-         reminderInput
-}
-
 // MARK: - TaskFormViewControllerProtocol declaration
-protocol TaskFormViewControllerProtocol: NSObject {
+protocol TaskFormViewControllerProtocol: BaseViewControllerProtocol {
     
 }
 
 // MARK: - TaskFormViewController implementation
-class TaskFormViewController: UIViewController {
+class TaskFormViewController: BaseViewController {
     
     private let presenter: TaskFormPresenterProtocol
     
@@ -72,7 +66,7 @@ class TaskFormViewController: UIViewController {
         let inputView: CCInputFieldView = CCInputFieldView()
         inputView.title = "taskTitleInputView"
         inputView.textFieldDelegate = self
-        inputView.tag = TaskFormInputFields.titleInput.rawValue
+        inputView.inputTag = TaskFormInputFields.titleInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView
     }()
@@ -81,7 +75,7 @@ class TaskFormViewController: UIViewController {
         let inputView: CCInputFieldView = CCInputFieldView()
         inputView.title = "taskDescInputView"
         inputView.textFieldDelegate = self
-        inputView.tag = TaskFormInputFields.descInput.rawValue
+        inputView.inputTag = TaskFormInputFields.descInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView
     }()
@@ -98,7 +92,7 @@ class TaskFormViewController: UIViewController {
         let inputView: CCInputFieldView = CCInputFieldView()
         inputView.title = "taskRemindernputView"
         inputView.textFieldDelegate = self
-        inputView.tag = TaskFormInputFields.reminderInput.rawValue
+        inputView.inputTag = TaskFormInputFields.reminderInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView
     }()
@@ -117,7 +111,8 @@ class TaskFormViewController: UIViewController {
     }()
     
     private func submitButtonPressed() {
-        // check data require and send to presenter
+        view.endEditing(true)
+        presenter.submit()
     }
     
     private func setupView() {
@@ -165,5 +160,7 @@ extension TaskFormViewController: TaskFormViewControllerProtocol {
 
 // MARK: - UITextFieldDelegate implementation
 extension TaskFormViewController: UITextFieldDelegate {
-    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        presenter.setValue(for: textField.tag, with: textField.text)
+    }
 }

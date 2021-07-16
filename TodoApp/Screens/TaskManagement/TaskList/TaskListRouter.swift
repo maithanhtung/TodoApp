@@ -15,13 +15,13 @@ protocol TaskListRouterDelegate: AnyObject {
 protocol TaskListRouterProtocol {
     
     var delegate: TaskListRouterDelegate? { get set }
-
+    
 }
 
 // MARK: - TaskListRouter implementation
 class TaskListRouter: NSObject, TaskListRouterProtocol {
     weak var delegate: TaskListRouterDelegate?
-
+    var presenter: TaskListPresenter?
     var navigationController: UINavigationController?
     
     required init(navigationController: UINavigationController? = .none) {
@@ -39,7 +39,7 @@ class TaskListRouter: NSObject, TaskListRouterProtocol {
         let interactor = TaskListInteractor()
         let presenter = TaskListPresenter(interactor: interactor, delegate: self)
         let controller = TaskListViewController(presenter: presenter)
-
+        self.presenter = presenter
         return controller
     }
     
@@ -58,7 +58,14 @@ extension TaskListRouter: TaskListPresenterDelegate {
     func openAddTaskForm() {
         if let nav = navigationController {
             let taskFormRouter: TaskFormRouter = TaskFormRouter(navigationController: nav)
+            taskFormRouter.delegate = self
             taskFormRouter.load()
         }
+    }
+}
+
+extension TaskListRouter: TaskFormRouterDelegate {
+    func taskFormRouterDidFinish() {
+        presenter?.viewIsReady()
     }
 }

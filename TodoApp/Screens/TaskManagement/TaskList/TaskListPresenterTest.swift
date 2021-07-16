@@ -44,6 +44,15 @@ private class MockInteractor: NSObject, TaskListInteractorProtocol {
 }
 
 private class MockViewController: NSObject, TaskListViewControllerProtocol {
+    var didCallShowLoadingView: Bool = false
+    func showLoadingView() {
+        didCallShowLoadingView = true
+    }
+    
+    var didCallDissmissLoadingView: Bool = false
+    func dissmissLoadingView() {
+        didCallDissmissLoadingView = true
+    }
     
     var didCallRefreshView: Bool = false
     func refreshView() {
@@ -51,6 +60,8 @@ private class MockViewController: NSObject, TaskListViewControllerProtocol {
     }
     
     func resetMockViewControllerValues() {
+        didCallShowLoadingView = false
+        didCallDissmissLoadingView = false
         didCallRefreshView = false
     }
 }
@@ -79,10 +90,11 @@ class TaskListPresenterTest: XCTestCase {
     func testViewIsReady() {
         testedPresenter.viewIsReady()
         
+        XCTAssertTrue(mockViewController.didCallShowLoadingView)
         XCTAssertTrue(mockInteractor.didCallFetchTaskList)
         
         testedPresenter.taskListFetchSucceeded(with: taskListMock)
-        
+        XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
         XCTAssertTrue(mockViewController.didCallRefreshView)
     }
     
@@ -99,17 +111,19 @@ class TaskListPresenterTest: XCTestCase {
     }
     
     func testNumberOfItem() {
-        testedPresenter.taskListFetchFailed()
+        testedPresenter.taskListFetchFailed(with: TDError(errorString: "error"))
+        XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
         XCTAssertEqual(testedPresenter.numberOfItem(section: 0), 0)
         
         testedPresenter.taskListFetchSucceeded(with: taskListMock)
         
+        XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
         XCTAssertEqual(testedPresenter.numberOfItem(section: 0), 4)
         XCTAssertEqual(testedPresenter.numberOfItem(section: 1), 0)
     }
     
     func testItemAtIndexPath() {
-        testedPresenter.taskListFetchFailed()
+        testedPresenter.taskListFetchFailed(with: TDError(errorString: "error"))
         XCTAssertNil(testedPresenter.taskItem(at: IndexPath(row: 0, section: 0)))
         
         testedPresenter.taskListFetchSucceeded(with: taskListMock)
@@ -120,7 +134,7 @@ class TaskListPresenterTest: XCTestCase {
     }
     
     func testDidSelectItemAtIndexPath() {
-        testedPresenter.taskListFetchFailed()
+        testedPresenter.taskListFetchFailed(with: TDError(errorString: "error"))
         testedPresenter.didSelectItem(at: IndexPath(row: 0, section: 0))
         XCTAssertFalse(mockDelegate.didCallOpenTaskDetail)
         XCTAssertNil(mockDelegate.taskIdForDetail)

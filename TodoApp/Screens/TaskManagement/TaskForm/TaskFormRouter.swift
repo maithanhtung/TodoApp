@@ -9,6 +9,7 @@ import UIKit
 
  // MARK: - TaskFormRouterDelegate declaration
  protocol TaskFormRouterDelegate: AnyObject {
+    func taskFormRouterDidFinish()
  }
 
  // MARK: - TaskFormRouterProtocol declaration
@@ -46,5 +47,11 @@ import UIKit
  }
 
  // MARK: - TaskFormPresenter delegate
- extension TaskFormRouter: TaskFormPresenterDelegate {
+extension TaskFormRouter: TaskFormPresenterDelegate {
+    func presenterDidFinish() {
+        if let nav = navigationController {
+            delegate?.taskFormRouterDidFinish()
+            nav.popViewController(animated: true)
+        }
+    }
  }
