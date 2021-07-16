@@ -74,7 +74,7 @@ class TaskFormPresenter: NSObject, TaskFormPresenterProtocol {
             print("missing some thing")
             return
         }
-        let newTask: Task = Task(id: "", title: taskTitle, description: taskDesc, dueDate: Date(), reminderText: taskReminder)
+        let newTask: Task = Task(title: taskTitle, description: taskDesc, dueDate: Date(), reminderText: taskReminder)
         
         viewController?.showLoadingView()
         interactor.addTask(with: newTask)
@@ -85,12 +85,13 @@ class TaskFormPresenter: NSObject, TaskFormPresenterProtocol {
 // MARK: - TaskFormInteractor delegate
 extension TaskFormPresenter: TaskFormInteractorDelegate {
     func taskAddSucceeded() {
+        viewController?.showSuccessBanner(with: "Add task successfully")
         delegate.presenterDidFinish()
         viewController?.dissmissLoadingView()
     }
     
     func taskAddFailed(with error: TDError) {
-        //TODO: implement show error to user
+        viewController?.showErrorBanner(with: error.errorString)
         viewController?.dissmissLoadingView()
     }
 }

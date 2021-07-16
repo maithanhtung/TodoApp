@@ -7,15 +7,24 @@
 
 import UIKit
 
+enum CCCellViewStyle: CaseIterable {
+    case normalCell,
+         selectionCell
+}
+
 class CCCellView: UIView {
-    public init() {
+    public init(style: CCCellViewStyle = .normalCell) {
         super.init(frame: .zero)
-        setupView()
+        setupView(style: style)
     }
 
-    public required init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder, style: CCCellViewStyle = .normalCell) {
         super.init(coder: aDecoder)
-        setupView()
+        setupView(style: style)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     var title: String? {
@@ -30,9 +39,20 @@ class CCCellView: UIView {
         }
     }
     
+    var style: CCCellViewStyle = .normalCell {
+        didSet {
+            iconImageView.removeFromSuperview()
+            titleLabel.removeFromSuperview()
+            subTitleLabel.removeFromSuperview()
+            
+            setupView(style: style)
+        }
+    }
+    
     private lazy var titleLabel: CCLabel = {
         let label: CCLabel = CCLabel()
         label.font = CCFont.titleFont
+        label.textColor = UIColor(named: "titleLabelColor")
         label.translatesAutoresizingMaskIntoConstraints = false
 
         return label
@@ -55,40 +75,55 @@ class CCCellView: UIView {
     }()
     
     
-    private func setupView() {
+    private func setupView(style: CCCellViewStyle) {
         backgroundColor = UIColor(named: "cellBackgroundColor")
 
-        addSubview(iconImageView)
+        if style == .selectionCell {
+            addSubview(iconImageView)
+        }
         addSubview(titleLabel)
         addSubview(subTitleLabel)
         
-        setupConstraints()
+        setupConstraints(style: style)
     }
     
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            
-            titleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
-            titleLabel.trailingAnchor.constraint(equalTo: subTitleLabel.trailingAnchor),
-            titleLabel.topAnchor.constraint(equalTo: availableGuide.topAnchor, constant: CCMargin.large),
+    private func setupConstraints(style: CCCellViewStyle) {
+        
+        switch style {
+        case .normalCell:
+            NSLayoutConstraint.activate([
+                titleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
+                titleLabel.trailingAnchor.constraint(equalTo: subTitleLabel.trailingAnchor),
+                titleLabel.topAnchor.constraint(equalTo: availableGuide.topAnchor, constant: CCMargin.large),
 
-            subTitleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
-            subTitleLabel.bottomAnchor.constraint(equalTo: availableGuide.bottomAnchor, constant: -CCMargin.small),
-            
-            iconImageView.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.large),
-            iconImageView.leadingAnchor.constraint(greaterThanOrEqualTo: subTitleLabel.trailingAnchor, constant: CCMargin.large),
-            iconImageView.centerYAnchor.constraint(equalTo: availableGuide.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 10),
-            iconImageView.heightAnchor.constraint(equalToConstant: 10),
-        ])
+                subTitleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
+                subTitleLabel.bottomAnchor.constraint(equalTo: availableGuide.bottomAnchor, constant: -CCMargin.small),
+                subTitleLabel.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.large*2)
+            ])
+        case .selectionCell:
+            NSLayoutConstraint.activate([
+                titleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
+                titleLabel.trailingAnchor.constraint(equalTo: subTitleLabel.trailingAnchor),
+                titleLabel.topAnchor.constraint(equalTo: availableGuide.topAnchor, constant: CCMargin.large),
+
+                subTitleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
+                subTitleLabel.bottomAnchor.constraint(equalTo: availableGuide.bottomAnchor, constant: -CCMargin.small),
+                
+                iconImageView.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.large),
+                iconImageView.leadingAnchor.constraint(greaterThanOrEqualTo: subTitleLabel.trailingAnchor, constant: CCMargin.large),
+                iconImageView.centerYAnchor.constraint(equalTo: availableGuide.centerYAnchor),
+                iconImageView.widthAnchor.constraint(equalToConstant: 10),
+                iconImageView.heightAnchor.constraint(equalToConstant: 10),
+            ])
+        }
         
         let titleLabelBottomAnchor: NSLayoutConstraint = titleLabel.bottomAnchor.constraint(equalTo: availableGuide.centerYAnchor, constant: -CCMargin.small)
         titleLabelBottomAnchor.priority = .defaultHigh
         titleLabelBottomAnchor.isActive = true
         
-        let subTitleLabelBottomAnchor: NSLayoutConstraint =             subTitleLabel.topAnchor.constraint(equalTo: availableGuide.centerYAnchor)
-        subTitleLabelBottomAnchor.priority = .defaultHigh
-        subTitleLabelBottomAnchor.isActive = true
+        let subTitleLabelTopAnchor: NSLayoutConstraint = subTitleLabel.topAnchor.constraint(equalTo: availableGuide.centerYAnchor)
+        subTitleLabelTopAnchor.priority = .defaultHigh
+        subTitleLabelTopAnchor.isActive = true
     }
     
 }

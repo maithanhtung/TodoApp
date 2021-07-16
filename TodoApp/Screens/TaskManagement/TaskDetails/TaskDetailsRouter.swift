@@ -9,6 +9,7 @@ import UIKit
 
 // MARK: - TaskDetailsRouterDelegate declaration
 protocol TaskDetailsRouterDelegate: AnyObject {
+    func taskDetailsRouterDidFinish()
 }
 
 // MARK: - TaskDetailsRouterProtocol declaration
@@ -29,15 +30,15 @@ class TaskDetailsRouter: NSObject, TaskDetailsRouterProtocol {
         super.init()
     }
     
-    func load() {
+    func load(with task: Task) {
         if let nav = navigationController {
-            nav.pushViewController(createViewController(), animated: true)
+            nav.pushViewController(createViewController(with: task), animated: true)
         }
     }
     
-    func createViewController() -> UIViewController {
+    func createViewController(with task: Task) -> UIViewController {
         let interactor = TaskDetailsInteractor()
-        let presenter = TaskDetailsPresenter(interactor: interactor, delegate: self)
+        let presenter = TaskDetailsPresenter(interactor: interactor, delegate: self, task: task)
         let controller = TaskDetailsViewController(presenter: presenter)
         self.presenter = presenter
         return controller
@@ -47,6 +48,16 @@ class TaskDetailsRouter: NSObject, TaskDetailsRouterProtocol {
 
 // MARK: - TaskDetailsPresenter delegate
 extension TaskDetailsRouter: TaskDetailsPresenterDelegate {
+    func openEditTaskForm(with task: Task) {
+        // TODO: Will be implement
+    }
+    
+    func presenterDidFinish() {
+        if let nav = navigationController {
+            delegate?.taskDetailsRouterDidFinish()
+            nav.popViewController(animated: true)
+        }
+    }
 }
 
 

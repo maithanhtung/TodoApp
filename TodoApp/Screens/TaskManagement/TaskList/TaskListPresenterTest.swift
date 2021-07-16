@@ -15,16 +15,17 @@ private class MockDelegate: TaskListPresenterDelegate {
     }
     
     var didCallOpenTaskDetail: Bool = false
-    var taskIdForDetail: String?
-    func openTaskDetail(with taskId: String) {
+    var task: Task?
+    func openTaskDetail(with task: Task) {
         didCallOpenTaskDetail = true
-        taskIdForDetail = taskId
+        self.task = task
     }
     
     func resetMockDelegateValues() {
         didCallOpenAddTaskForm = false
         didCallOpenTaskDetail = false
-        taskIdForDetail = nil
+        task = nil
+        didCallOpenTaskDetail = false
     }
 }
 
@@ -38,6 +39,17 @@ private class MockInteractor: NSObject, TaskListInteractorProtocol {
 }
 
 private class MockViewController: NSObject, TaskListViewControllerProtocol {
+    
+    var didCallShowSuccessBanner: Bool = false
+    func showSuccessBanner(with message: String) {
+        didCallShowSuccessBanner = true
+    }
+    
+    var didCallShowErrorBanner: Bool = false
+    func showErrorBanner(with errorString: String) {
+        didCallShowErrorBanner = true
+    }
+    
     var didCallShowLoadingView: Bool = false
     func showLoadingView() {
         didCallShowLoadingView = true
@@ -125,15 +137,15 @@ class TaskListPresenterTest: XCTestCase {
         testedPresenter.taskListFetchFailed(with: TDError(errorString: "error"))
         testedPresenter.didSelectItem(at: IndexPath(row: 0, section: 0))
         XCTAssertFalse(mockDelegate.didCallOpenTaskDetail)
-        XCTAssertNil(mockDelegate.taskIdForDetail)
+        XCTAssertNil(mockDelegate.task)
         
         mockDelegate.resetMockDelegateValues()
         
         testedPresenter.taskListFetchSucceeded(with: taskListMock)
         testedPresenter.didSelectItem(at: IndexPath(row: 0, section: 0))
         XCTAssertTrue(mockDelegate.didCallOpenTaskDetail)
-        XCTAssertEqual(mockDelegate.taskIdForDetail, "task 1")
-
+        XCTAssertNotNil(mockDelegate.task)
+        XCTAssertEqual(mockDelegate.task?.id, "task 1")
     }
     
     private lazy var taskListMock: TaskList = {

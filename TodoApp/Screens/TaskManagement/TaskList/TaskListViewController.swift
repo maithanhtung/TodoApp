@@ -111,6 +111,7 @@ extension TaskListViewController: UICollectionViewDelegate, UICollectionViewData
             
             cell.title = dateFormatter.string(from: item.dueDate)
             cell.subTitle = item.title
+            cell.cellStyle = .selectionCell
         }
         
         return cell

@@ -34,7 +34,6 @@ class TaskFormViewController: BaseViewController {
         super.viewDidLoad()
         title = "Task Form"
         view.backgroundColor = UIColor(named: "viewBackgroundColor")
-        edgesForExtendedLayout = .all
         setupView()
     }
     
@@ -56,7 +55,7 @@ class TaskFormViewController: BaseViewController {
     private lazy var scrollView: UIScrollView = {
         let scrollView: UIScrollView = UIScrollView()
         scrollView.isScrollEnabled = true
-        scrollView.alwaysBounceVertical = true
+        scrollView.alwaysBounceVertical = false
         scrollView.alwaysBounceHorizontal = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
@@ -81,7 +80,7 @@ class TaskFormViewController: BaseViewController {
     }()
     
     private lazy var dueDatePickerView: CCCellView = {
-        let dueDatePickerView: CCCellView = CCCellView()
+        let dueDatePickerView: CCCellView = CCCellView(style: .selectionCell)
         dueDatePickerView.title = "Select duedate"
         dueDatePickerView.subTitle = "Please select"
         dueDatePickerView.translatesAutoresizingMaskIntoConstraints = false
@@ -124,7 +123,7 @@ class TaskFormViewController: BaseViewController {
         scrollView.addSubview(contentView)
         scrollView.addSubview(submitButton)
         
-        view.addSubview(scrollView)
+        fill(with: scrollView)
         setupConstraints()
     }
     
@@ -138,13 +137,8 @@ class TaskFormViewController: BaseViewController {
             submitButton.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: CCMargin.x_large),
             submitButton.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -CCMargin.x_large),
             submitButton.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: CCMargin.xx_large),
-            submitButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -CCMargin.large),
+            submitButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -CCMargin.xx_large),
             
-            
-            scrollView.leadingAnchor.constraint(equalTo: view.availableGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.availableGuide.trailingAnchor),
-            scrollView.topAnchor.constraint(equalTo: view.availableGuide.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.availableGuide.bottomAnchor),
             scrollView.widthAnchor.constraint(equalTo: view.availableGuide.widthAnchor)
         ])
         

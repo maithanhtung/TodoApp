@@ -26,6 +26,12 @@ class CCCell: UICollectionViewCell {
         setup(with: innerView)
     }
     
+    var cellStyle: CCCellViewStyle = .normalCell {
+        didSet {
+            innerView.style = cellStyle
+        }
+    }
+    
     var title: String? {
         didSet {
             innerView.title = title
@@ -43,9 +49,16 @@ class CCCell: UICollectionViewCell {
         innerView.translatesAutoresizingMaskIntoConstraints = false
         
         innerView.layer.cornerRadius = 10
+        
         let screenRect = UIScreen.main.bounds
-        let innerViewWidth = screenRect.size.width - CCMargin.large*2
+        var innerViewWidth: CGFloat
+        if UIDevice.current.orientation.isLandscape {
+            innerViewWidth = screenRect.size.height - CCMargin.large*2
+        } else {
+            innerViewWidth = screenRect.size.width - CCMargin.large*2
+        }
         let innerViewHeight = innerViewWidth/3
+
 
         // Setup constraints for the view to content view
         NSLayoutConstraint.activate([

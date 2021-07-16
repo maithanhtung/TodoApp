@@ -10,19 +10,13 @@ import UIKit
 protocol BaseViewControllerProtocol: NSObject {
     func showLoadingView()
     func dissmissLoadingView()
+    func showSuccessBanner(with message: String)
+    func showErrorBanner(with errorString: String)
 }
 
 class BaseViewController: UIViewController, BaseViewControllerProtocol {
     
     let loadingView: LoadingView = LoadingView()
-    
-    func presentLoading() {
-        fill(with: loadingView)
-    }
-    
-    func dismissLoading() {
-        loadingView.removeFromSuperview()
-    }
     
     func fill(with subView: UIView) {
         view.addSubview(subView)
@@ -36,10 +30,19 @@ class BaseViewController: UIViewController, BaseViewControllerProtocol {
     }
     
     func showLoadingView() {
-        presentLoading()
+        fill(with: loadingView)
     }
     
     func dissmissLoadingView() {
-        dismissLoading()
+        loadingView.removeFromSuperview()
+    }
+    
+    func showSuccessBanner(with message: String) {
+        NotificationBanner.show(message, backgroundColor: .systemBlue)
+    }
+    
+    func showErrorBanner(with errorString: String) {
+        NotificationBanner.show(errorString, backgroundColor: .systemRed)
+
     }
 }
