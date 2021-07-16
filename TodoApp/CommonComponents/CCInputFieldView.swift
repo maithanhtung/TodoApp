@@ -24,6 +24,12 @@ class CCInputFieldView: UIView {
         }
     }
     
+    var inputTag: Int = 0 {
+        didSet {
+            inputField.tag = inputTag
+        }
+    }
+    
     var textFieldDelegate: UITextFieldDelegate? {
         didSet {
             inputField.delegate = textFieldDelegate

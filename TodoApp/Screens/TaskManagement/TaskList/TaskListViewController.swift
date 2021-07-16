@@ -8,12 +8,12 @@
 import UIKit
 
 // MARK: - TaskListViewControllerProtocol declaration
-protocol TaskListViewControllerProtocol: NSObject {
+protocol TaskListViewControllerProtocol: BaseViewControllerProtocol {
     func refreshView()
 }
 
 // MARK: - TaskListViewController implementation
-class TaskListViewController: UIViewController {
+class TaskListViewController: BaseViewController {
     
     private let presenter: TaskListPresenterProtocol
 
@@ -35,7 +35,9 @@ class TaskListViewController: UIViewController {
         title = "Manage your tasks"
         view.backgroundColor = UIColor(named: "viewBackgroundColor")
         navigationController?.navigationBar.barTintColor = UIColor(named: "viewBackgroundColor")
+        
         setupView()
+        // tell presenter fetch task list
         presenter.viewIsReady()
     }
     

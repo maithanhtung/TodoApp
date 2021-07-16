@@ -12,7 +12,7 @@ protocol TaskListInteractorDelegate: AnyObject {
     
     func taskListFetchSucceeded(with list: TaskList)
     
-    func taskListFetchFailed()
+    func taskListFetchFailed(with error: TDError)
 }
 
 // MARK: - TaskListInteractorProtocol declaration
@@ -30,18 +30,10 @@ class TaskListInteractor: NSObject, TaskListInteractorProtocol {
     }
     
     func fetchTaskList() {
-        // to be implement, using some dummy data now
-        delegate?.taskListFetchSucceeded(with: taskListMock)
+        TaskManagementController().fetchTaskList(onSuccess: { [weak self] taskList in
+            self?.delegate?.taskListFetchSucceeded(with: taskList)
+        }, onFail: { error in
+            self.delegate?.taskListFetchFailed(with: error)
+        })
     }
-    
-    private lazy var taskListMock: TaskList = {
-        var taskList: TaskList = TaskList(tasks: [])
-        let task1: Task = Task(id: "task 1", title: "title 1", description: "description 1", dueDate: Date(), reminderText: "reminder 1")
-        let task2: Task = Task(id: "task 2", title: "title 2", description: "description 2", dueDate: Date(), reminderText: "reminder 2")
-        let task3: Task = Task(id: "task 3", title: "title 3", description: "description 3", dueDate: Date(), reminderText: "reminder 3")
-        let task4: Task = Task(id: "task 4", title: "title 4", description: "description 4", dueDate: Date(), reminderText: "reminder 4")
-        taskList.tasks = [task1, task2, task3, task4]
-        
-        return taskList
-    }()
 }
