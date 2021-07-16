@@ -51,10 +51,6 @@ extension TaskListRouter: TaskListPresenterDelegate {
         // To be implement
     }
     
-    func logout() {
-        // To be implement
-    }
-    
     func openAddTaskForm() {
         if let nav = navigationController {
             let taskFormRouter: TaskFormRouter = TaskFormRouter(navigationController: nav)

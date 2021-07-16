@@ -10,9 +10,7 @@ import Foundation
 // MARK: - TaskListPresenterDelegate declaration
 protocol TaskListPresenterDelegate: AnyObject {
     func openAddTaskForm()
-    
-    func logout()
-    
+        
     func openTaskDetail(with taskId: String)
 }
 
@@ -27,9 +25,7 @@ protocol TaskListPresenterProtocol: NSObject {
     func viewIsReady()
     
     func addTask()
-    
-    func logout()
-    
+        
     func numberOfItem(section: Int) -> Int
     
     func taskItem(at indexPath: IndexPath) -> Task?
@@ -62,10 +58,6 @@ class TaskListPresenter: NSObject, TaskListPresenterProtocol {
     
     func addTask() {
         delegate.openAddTaskForm()
-    }
-    
-    func logout() {
-        delegate.logout()
     }
     
     func numberOfItem(section: Int) -> Int {

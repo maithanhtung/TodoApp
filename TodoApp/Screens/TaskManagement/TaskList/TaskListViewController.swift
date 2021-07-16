@@ -91,7 +91,7 @@ class TaskListViewController: BaseViewController {
     }
     
     @objc func logoutButtonPressed() {
-        presenter.logout()
+        view.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
 }
 
