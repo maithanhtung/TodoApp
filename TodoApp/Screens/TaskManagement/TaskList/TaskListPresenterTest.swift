@@ -21,15 +21,9 @@ private class MockDelegate: TaskListPresenterDelegate {
         taskIdForDetail = taskId
     }
     
-    var didCallLogout: Bool = false
-    func logout() {
-        didCallLogout = true
-    }
-    
     func resetMockDelegateValues() {
         didCallOpenAddTaskForm = false
         didCallOpenTaskDetail = false
-        didCallLogout = false
         taskIdForDetail = nil
     }
 }
@@ -102,12 +96,6 @@ class TaskListPresenterTest: XCTestCase {
         testedPresenter.addTask()
         
         XCTAssertTrue(mockDelegate.didCallOpenAddTaskForm)
-    }
-    
-    func testLogout() {
-        testedPresenter.logout()
-        
-        XCTAssertTrue(mockDelegate.didCallLogout)
     }
     
     func testNumberOfItem() {

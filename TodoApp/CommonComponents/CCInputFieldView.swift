@@ -50,6 +50,7 @@ class CCInputFieldView: UIView {
         inputField.layer.borderWidth = 2.0
         inputField.layer.borderColor = UIColor(named: "textFieldBorderColor")?.cgColor
         inputField.backgroundColor = .white
+        inputField.textColor = .black
         inputField.translatesAutoresizingMaskIntoConstraints = false
         
         return inputField
