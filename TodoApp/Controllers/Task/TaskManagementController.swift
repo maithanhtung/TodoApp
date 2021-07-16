@@ -32,9 +32,9 @@ class TaskManagementController {
         var task: Task = newTask
         var taskArray: [Task] = []
         
-        if let tasks = oldTasks {
+        if let tasks = oldTasks, let lastItemId = tasks.last?.id {
             // if there is existing tasks, append new task with id = last task id + 1.
-            task.id = String(Int(tasks.last!.id) ?? 0 + 1)
+            task.id = String((Int(lastItemId) ?? 0).advanced(by: 1))
             taskArray = tasks
         } else {
             // start with 0

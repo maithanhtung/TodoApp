@@ -44,6 +44,7 @@
 		089CFFF726A1AB5900A4D410 /* TaskDetailsRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFF626A1AB5900A4D410 /* TaskDetailsRouter.swift */; };
 		089CFFF926A1AB6700A4D410 /* TaskDetailsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFF826A1AB6700A4D410 /* TaskDetailsInteractor.swift */; };
 		089CFFFB26A1AB8000A4D410 /* TaskDetailsPresenterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFFA26A1AB8000A4D410 /* TaskDetailsPresenterTest.swift */; };
+		089CFFFD26A2070D00A4D410 /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFFC26A2070D00A4D410 /* NotificationBanner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +99,7 @@
 		089CFFF626A1AB5900A4D410 /* TaskDetailsRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsRouter.swift; sourceTree = "<group>"; };
 		089CFFF826A1AB6700A4D410 /* TaskDetailsInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsInteractor.swift; sourceTree = "<group>"; };
 		089CFFFA26A1AB8000A4D410 /* TaskDetailsPresenterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsPresenterTest.swift; sourceTree = "<group>"; };
+		089CFFFC26A2070D00A4D410 /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 				084F196526A02E02002606BE /* CCLabel.swift */,
 				089CFFEE26A1786200A4D410 /* LoadingView.swift */,
 				089CFFF026A179A900A4D410 /* BaseViewController.swift */,
+				089CFFFC26A2070D00A4D410 /* NotificationBanner.swift */,
 			);
 			path = CommonComponents;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 				089CFFEF26A1786200A4D410 /* LoadingView.swift in Sources */,
 				084F192E269E291E002606BE /* TaskListPresenter.swift in Sources */,
 				084F1958269F4B76002606BE /* TaskFormPresenter.swift in Sources */,
+				089CFFFD26A2070D00A4D410 /* NotificationBanner.swift in Sources */,
 				0831B5AD269A42D900964905 /* CCButton.swift in Sources */,
 				089CFFED26A0C8D200A4D410 /* TDError.swift in Sources */,
 				084F193C269E4472002606BE /* Task.swift in Sources */,

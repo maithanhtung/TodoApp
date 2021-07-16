@@ -37,6 +37,17 @@ private class MockInteractor: NSObject, TaskFormInteractorProtocol {
 }
 
 private class MockViewController: NSObject, TaskFormViewControllerProtocol {
+    
+    var didCallShowSuccessBanner: Bool = false
+    func showSuccessBanner(with message: String) {
+        didCallShowSuccessBanner = true
+    }
+    
+    var didCallShowErrorBanner: Bool = false
+    func showErrorBanner(with errorString: String) {
+        didCallShowErrorBanner = true
+    }
+    
     var didCallShowLoadingView: Bool = false
     func showLoadingView() {
         didCallShowLoadingView = true
@@ -56,6 +67,8 @@ private class MockViewController: NSObject, TaskFormViewControllerProtocol {
         didCallShowLoadingView = false
         didCallDissmissLoadingView = false
         didCallRefreshView = false
+        didCallShowSuccessBanner = false
+        didCallShowErrorBanner = false
     }
 }
 
@@ -101,7 +114,7 @@ class TaskFormPresenterTest: XCTestCase {
         XCTAssertTrue(mockInteractor.didCallAddTask)
         XCTAssertNotNil(mockInteractor.newTask)
         XCTAssertEqual(mockInteractor.newTask?.title, "Title")
-        XCTAssertEqual(mockInteractor.newTask?.id, "")
+        XCTAssertNil(mockInteractor.newTask?.id)
     }
     
     func testAddTask() {
@@ -112,10 +125,12 @@ class TaskFormPresenterTest: XCTestCase {
         XCTAssertTrue(mockViewController.didCallShowLoadingView)
         
         testedPresenter.taskAddFailed(with: TDError(errorString: "error"))
+        XCTAssertTrue(mockViewController.didCallShowErrorBanner)
         XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
         XCTAssertFalse(mockDelegate.didCallPresenterDidFinish)
         
         testedPresenter.taskAddSucceeded()
+        XCTAssertTrue(mockViewController.didCallShowSuccessBanner)
         XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
         XCTAssertTrue(mockDelegate.didCallPresenterDidFinish)
     }

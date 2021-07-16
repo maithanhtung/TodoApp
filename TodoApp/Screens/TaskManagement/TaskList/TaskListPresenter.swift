@@ -11,7 +11,7 @@ import Foundation
 protocol TaskListPresenterDelegate: AnyObject {
     func openAddTaskForm()
         
-    func openTaskDetail(with taskId: String)
+    func openTaskDetail(with task: Task)
 }
 
 // MARK: - TaskListPresenterProtocol declaration
@@ -76,7 +76,7 @@ class TaskListPresenter: NSObject, TaskListPresenterProtocol {
     
     func didSelectItem(at indexPath: IndexPath) {
         if let task = taskItem(at: indexPath) {
-            delegate.openTaskDetail(with: task.id)
+            delegate.openTaskDetail(with: task)
         }
     }
     
@@ -91,8 +91,7 @@ extension TaskListPresenter: TaskListInteractorDelegate {
     }
     
     func taskListFetchFailed(with error: TDError) {
-        //TODO: implement show error to user
-        print(error.errorString)
+        viewController?.showErrorBanner(with: error.errorString)
         viewController?.dissmissLoadingView()
     }
 }

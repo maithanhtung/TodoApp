@@ -47,8 +47,12 @@ class TaskListRouter: NSObject, TaskListRouterProtocol {
 
 // MARK: - TaskListPresenter delegate
 extension TaskListRouter: TaskListPresenterDelegate {
-    func openTaskDetail(with taskId: String) {
-        // To be implement
+    func openTaskDetail(with task: Task) {
+        if let nav = navigationController {
+            let taskDetailsRouter: TaskDetailsRouter = TaskDetailsRouter(navigationController: nav)
+            taskDetailsRouter.delegate = self
+            taskDetailsRouter.load(with: task)
+        }
     }
     
     func openAddTaskForm() {
@@ -64,4 +68,11 @@ extension TaskListRouter: TaskFormRouterDelegate {
     func taskFormRouterDidFinish() {
         presenter?.viewIsReady()
     }
+}
+
+extension TaskListRouter: TaskDetailsRouterDelegate {
+    func taskDetailsRouterDidFinish() {
+        presenter?.viewIsReady()
+    }
+    
 }

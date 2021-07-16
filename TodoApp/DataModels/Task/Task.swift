@@ -8,7 +8,7 @@
 import Foundation
 
 struct Task: Codable {
-    var id: String
+    var id: String? = .none
     var title: String
     var description: String
     var dueDate: Date
