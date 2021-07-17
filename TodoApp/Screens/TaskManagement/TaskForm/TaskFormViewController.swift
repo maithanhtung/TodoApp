@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - TaskFormViewControllerProtocol declaration
 protocol TaskFormViewControllerProtocol: BaseViewControllerProtocol {
-    
+    func refreshView()
 }
 
 // MARK: - TaskFormViewController implementation
@@ -81,9 +81,12 @@ class TaskFormViewController: BaseViewController {
     
     private lazy var dueDatePickerView: CCCellView = {
         let dueDatePickerView: CCCellView = CCCellView(style: .selectionCell)
-        dueDatePickerView.title = "Select duedate"
-        dueDatePickerView.subTitle = "Please select"
+        dueDatePickerView.title = "Due date"
+        dueDatePickerView.subTitle = "Select date"
         dueDatePickerView.translatesAutoresizingMaskIntoConstraints = false
+        dueDatePickerView.isUserInteractionEnabled = true
+        dueDatePickerView.addGestureRecognizer(createTapRecognizer())
+        
         return dueDatePickerView
     }()
     
@@ -145,16 +148,44 @@ class TaskFormViewController: BaseViewController {
         view.layoutIfNeeded()
     }
     
+    // Tap handle
+    func createTapRecognizer() -> UITapGestureRecognizer {
+        return UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
+    }
+    
+    @objc func handleTap(sender: UITapGestureRecognizer? = nil) {
+        if let nav = navigationController, sender?.state == .ended {
+            let datePickerVC: DatePickerViewController = DatePickerViewController()
+            datePickerVC.delegate = self
+            nav.modalPresentationStyle = .popover
+            nav.present(datePickerVC, animated: true, completion: nil)
+        }
+    }
+    
 }
 
 // MARK: - TaskFormViewControllerProtocol implementation
 extension TaskFormViewController: TaskFormViewControllerProtocol {
-    
+    func refreshView() {
+        if let dueDate = presenter.dueDate {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/YY HH:mm"
+            
+            dueDatePickerView.subTitle = dateFormatter.string(from: dueDate)
+        }
+    }
 }
 
 // MARK: - UITextFieldDelegate implementation
 extension TaskFormViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         presenter.setValue(for: textField.tag, with: textField.text)
+    }
+}
+
+// MARK: - DatePickerViewControllerDelegate implementation
+extension TaskFormViewController: DatePickerViewControllerDelegate {
+    func didSelectDate(date: Date) {
+        presenter.dueDate = date
     }
 }

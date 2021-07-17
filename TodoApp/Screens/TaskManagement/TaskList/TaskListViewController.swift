@@ -107,7 +107,7 @@ extension TaskListViewController: UICollectionViewDelegate, UICollectionViewData
         
         if let item = presenter.taskItem(at: indexPath) {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd/MM/YY"
+            dateFormatter.dateFormat = "dd/MM/YY HH:mm"
             
             cell.title = dateFormatter.string(from: item.dueDate)
             cell.subTitle = item.title

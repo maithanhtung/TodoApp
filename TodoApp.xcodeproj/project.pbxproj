@@ -35,6 +35,8 @@
 		084F1960269F4F5E002606BE /* CCInputFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F195F269F4F5E002606BE /* CCInputFieldView.swift */; };
 		084F1964269F6B89002606BE /* CCTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F1963269F6B89002606BE /* CCTextField.swift */; };
 		084F196626A02E02002606BE /* CCLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084F196526A02E02002606BE /* CCLabel.swift */; };
+		089C000226A22AB700A4D410 /* CCDatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089C000126A22AB700A4D410 /* CCDatePickerView.swift */; };
+		089C000426A2343600A4D410 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089C000326A2343600A4D410 /* DatePickerViewController.swift */; };
 		089CFFEA26A0BD6B00A4D410 /* TaskManagementController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFE926A0BD6B00A4D410 /* TaskManagementController.swift */; };
 		089CFFED26A0C8D200A4D410 /* TDError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFEC26A0C8D200A4D410 /* TDError.swift */; };
 		089CFFEF26A1786200A4D410 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089CFFEE26A1786200A4D410 /* LoadingView.swift */; };
@@ -90,6 +92,8 @@
 		084F195F269F4F5E002606BE /* CCInputFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCInputFieldView.swift; sourceTree = "<group>"; };
 		084F1963269F6B89002606BE /* CCTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCTextField.swift; sourceTree = "<group>"; };
 		084F196526A02E02002606BE /* CCLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCLabel.swift; sourceTree = "<group>"; };
+		089C000126A22AB700A4D410 /* CCDatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CCDatePickerView.swift; sourceTree = "<group>"; };
+		089C000326A2343600A4D410 /* DatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		089CFFE926A0BD6B00A4D410 /* TaskManagementController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagementController.swift; sourceTree = "<group>"; };
 		089CFFEC26A0C8D200A4D410 /* TDError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDError.swift; sourceTree = "<group>"; };
 		089CFFEE26A1786200A4D410 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -141,6 +145,7 @@
 		0831B581269A35F500964905 /* TodoApp */ = {
 			isa = PBXGroup;
 			children = (
+				089CFFFE26A21D9000A4D410 /* Base */,
 				089CFFE726A0BD4F00A4D410 /* Controllers */,
 				0831B5A6269A3D5100964905 /* Extensions */,
 				0831B598269A370700964905 /* Screens */,
@@ -168,8 +173,8 @@
 				084F1963269F6B89002606BE /* CCTextField.swift */,
 				084F196526A02E02002606BE /* CCLabel.swift */,
 				089CFFEE26A1786200A4D410 /* LoadingView.swift */,
-				089CFFF026A179A900A4D410 /* BaseViewController.swift */,
 				089CFFFC26A2070D00A4D410 /* NotificationBanner.swift */,
+				089C000126A22AB700A4D410 /* CCDatePickerView.swift */,
 			);
 			path = CommonComponents;
 			sourceTree = "<group>";
@@ -304,6 +309,15 @@
 			path = Error;
 			sourceTree = "<group>";
 		};
+		089CFFFE26A21D9000A4D410 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				089CFFF026A179A900A4D410 /* BaseViewController.swift */,
+				089C000326A2343600A4D410 /* DatePickerViewController.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -409,6 +423,7 @@
 				0831B587269A35F500964905 /* LoginViewController.swift in Sources */,
 				084F1936269E342F002606BE /* CCCellView.swift in Sources */,
 				084F1932269E2934002606BE /* TaskListInteractor.swift in Sources */,
+				089C000226A22AB700A4D410 /* CCDatePickerView.swift in Sources */,
 				084F1938269E39D8002606BE /* CCFont.swift in Sources */,
 				089CFFEA26A0BD6B00A4D410 /* TaskManagementController.swift in Sources */,
 				089CFFEF26A1786200A4D410 /* LoadingView.swift in Sources */,
@@ -429,6 +444,7 @@
 				084F1964269F6B89002606BE /* CCTextField.swift in Sources */,
 				0831B5A8269A3D7E00964905 /* UIViewExtensions.swift in Sources */,
 				0831B585269A35F500964905 /* SceneDelegate.swift in Sources */,
+				089C000426A2343600A4D410 /* DatePickerViewController.swift in Sources */,
 				089CFFF326A1AB3600A4D410 /* TaskDetailsViewController.swift in Sources */,
 				084F1956269F4B67002606BE /* TaskFormViewController.swift in Sources */,
 				084F192C269E2911002606BE /* TaskListRouter.swift in Sources */,

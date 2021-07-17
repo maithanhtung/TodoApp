@@ -96,7 +96,7 @@ class TaskDetailsViewController: BaseViewController {
         let view: CCCellView = CCCellView()
         view.title = "Duedate"
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd/MM/YY"
+        dateFormatter.dateFormat = "dd/MM/YY HH:mm"
         view.subTitle = dateFormatter.string(from: presenter.task.dueDate)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
