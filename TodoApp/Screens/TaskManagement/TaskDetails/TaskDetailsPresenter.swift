@@ -23,9 +23,13 @@ protocol TaskDetailsPresenterProtocol: NSObject {
     
     init(interactor: TaskDetailsInteractorProtocol, delegate: TaskDetailsPresenterDelegate, task: Task)
     
+    func fetchUpdateTask()
+    
     func editTask()
     
     func deleteTask()
+    
+    func back()
 }
 
 // MARK: - TaskDetailsPresenter implementation
@@ -54,6 +58,18 @@ class TaskDetailsPresenter: NSObject, TaskDetailsPresenterProtocol {
         viewController?.showLoadingView()
         interactor.delete(task: self.task)
     }
+    
+    func fetchUpdateTask() {
+        if let taskId = task.id {
+            viewController?.showLoadingView()
+            interactor.fetchTask(taskId: taskId)
+        }
+    }
+    
+    // request taskList view fetch up to date data
+    func back() {
+        delegate.presenterDidFinish()
+    }
 }
 
 // MARK: - TaskDetailsInteractor delegate
@@ -65,6 +81,17 @@ extension TaskDetailsPresenter: TaskDetailsInteractorDelegate {
     }
     
     func deleteTaskFailed(with error: TDError) {
+        viewController?.showErrorBanner(with: error.errorString)
+        viewController?.dissmissLoadingView()
+    }
+    
+    func fetchTaskSucceeded(with task: Task) {
+        self.task = task
+        viewController?.refreshView()
+        viewController?.dissmissLoadingView()
+    }
+    
+    func fetchTaskFailed(with error: TDError) {
         viewController?.showErrorBanner(with: error.errorString)
         viewController?.dissmissLoadingView()
     }

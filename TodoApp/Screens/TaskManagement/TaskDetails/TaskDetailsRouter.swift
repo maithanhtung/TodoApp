@@ -49,7 +49,11 @@ class TaskDetailsRouter: NSObject, TaskDetailsRouterProtocol {
 // MARK: - TaskDetailsPresenter delegate
 extension TaskDetailsRouter: TaskDetailsPresenterDelegate {
     func openEditTaskForm(with task: Task) {
-        // TODO: Will be implement
+        if let nav = navigationController {
+            let taskFormRouter: TaskFormRouter = TaskFormRouter(navigationController: nav)
+            taskFormRouter.delegate = self
+            taskFormRouter.load(with: task)
+        }
     }
     
     func presenterDidFinish() {
@@ -57,6 +61,13 @@ extension TaskDetailsRouter: TaskDetailsPresenterDelegate {
             delegate?.taskDetailsRouterDidFinish()
             nav.popViewController(animated: true)
         }
+    }
+}
+
+// MARK: - TaskFormRouter delegate
+extension TaskDetailsRouter: TaskFormRouterDelegate {
+    func taskFormRouterDidFinish() {
+        presenter?.fetchUpdateTask()
     }
 }
 

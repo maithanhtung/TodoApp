@@ -9,6 +9,7 @@ import UIKit
 
 // MARK: - TaskDetailsViewControllerProtocol declaration
 protocol TaskDetailsViewControllerProtocol: BaseViewControllerProtocol {
+    func refreshView()
 }
 
 // MARK: - TaskDetailsViewController implementation
@@ -36,7 +37,17 @@ class TaskDetailsViewController: BaseViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTaskButtonPressed))
         navigationItem.rightBarButtonItem?.tintColor = .systemGreen
         
+        // custom back button
+        self.navigationItem.hidesBackButton = true
+            
+        let newBackButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(back))
+        self.navigationItem.leftBarButtonItem = newBackButton
+        
         setupView()
+    }
+    
+    @objc func back() {
+        presenter.back()
     }
     
     @objc func editTaskButtonPressed() {
@@ -182,4 +193,14 @@ class TaskDetailsViewController: BaseViewController {
 }
 
 extension TaskDetailsViewController: TaskDetailsViewControllerProtocol {
+    func refreshView() {
+        titleView.subTitle = presenter.task.title
+        descView.subTitle = presenter.task.description
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/YY HH:mm"
+        dueDateView.subTitle = dateFormatter.string(from: presenter.task.dueDate)
+        
+        reminderView.subTitle = presenter.task.reminderText
+    }
 }

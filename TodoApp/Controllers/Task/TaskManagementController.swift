@@ -57,10 +57,31 @@ class TaskManagementController {
         
         // decode Json string to Object
         guard let list = loadTaskList(from: taskListString) else {
-            onFail(TDError(errorString: "Unable to unarchived"))
+            onFail(TDError(errorString: "Unable to unarchived task list Json string"))
             return
         }
         onSuccess(list)
+    }
+    
+    func fetchTask(taskId: String, onSuccess: @escaping (Task) -> Void,
+                   onFail: (TDError) -> Void) {
+        guard let taskListString = userDefault.string(forKey: taskListKey) else {
+            onFail(TDError(errorString: "Fail to fetch task list"))
+            return
+        }
+        
+        // decode Json string to Object
+        guard let list = loadTaskList(from: taskListString) else {
+            onFail(TDError(errorString: "Unable to unarchived task list Json string"))
+            return
+        }
+        
+        guard let task = list.tasks.first(where: { $0.id == taskId }) else {
+            onFail(TDError(errorString: "Task not found!"))
+            return
+        }
+        
+        onSuccess(task)
     }
     
     func addTask(with newTask: Task, onSuccess: () -> Void,
@@ -82,7 +103,7 @@ class TaskManagementController {
         
         // decode Json string to Object
         guard let oldList = loadTaskList(from: taskListData) else {
-            onFail(TDError(errorString: "Unable to encode"))
+            onFail(TDError(errorString: "Unable to decode task list Json string"))
             return
         }
         

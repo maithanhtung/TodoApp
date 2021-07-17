@@ -32,7 +32,7 @@ class TaskFormViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Task Form"
+        title = presenter.task == nil ? "Task Form" : "Edit task"
         view.backgroundColor = UIColor(named: "viewBackgroundColor")
         setupView()
     }
@@ -65,6 +65,9 @@ class TaskFormViewController: BaseViewController {
         let inputView: CCInputFieldView = CCInputFieldView()
         inputView.title = "taskTitleInputView"
         inputView.textFieldDelegate = self
+        if let task = presenter.task {
+            inputView.inputText = task.title
+        }
         inputView.inputTag = TaskFormInputFields.titleInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView
@@ -74,6 +77,9 @@ class TaskFormViewController: BaseViewController {
         let inputView: CCInputFieldView = CCInputFieldView()
         inputView.title = "taskDescInputView"
         inputView.textFieldDelegate = self
+        if let task = presenter.task {
+            inputView.inputText = task.description
+        }
         inputView.inputTag = TaskFormInputFields.descInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView
@@ -84,6 +90,12 @@ class TaskFormViewController: BaseViewController {
         dueDatePickerView.title = "Due date"
         dueDatePickerView.subTitle = "Select date"
         dueDatePickerView.translatesAutoresizingMaskIntoConstraints = false
+        if let dueDate = presenter.dueDate {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd/MM/YY HH:mm"
+            
+            dueDatePickerView.subTitle = dateFormatter.string(from: dueDate)
+        }
         dueDatePickerView.isUserInteractionEnabled = true
         dueDatePickerView.addGestureRecognizer(createTapRecognizer())
         
@@ -94,6 +106,9 @@ class TaskFormViewController: BaseViewController {
         let inputView: CCInputFieldView = CCInputFieldView()
         inputView.title = "taskRemindernputView"
         inputView.textFieldDelegate = self
+        if let task = presenter.task {
+            inputView.inputText = task.reminderText
+        }
         inputView.inputTag = TaskFormInputFields.reminderInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView

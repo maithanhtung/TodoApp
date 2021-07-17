@@ -30,9 +30,18 @@ private class MockInteractor: NSObject, TaskFormInteractorProtocol {
         newTask = task
     }
     
+    var didCallEditTask: Bool = false
+    var editedTask: Task?
+    func editTask(with task: Task) {
+        didCallEditTask = true
+        editedTask = task
+    }
+    
     func resetMockInteractorValues() {
         didCallAddTask = false
         newTask = nil
+        didCallEditTask = false
+        editedTask = nil
     }
 }
 
@@ -97,6 +106,7 @@ class TaskFormPresenterTest: XCTestCase {
         testedPresenter.submit()
         XCTAssertFalse(mockInteractor.didCallAddTask)
         XCTAssertNil(mockInteractor.newTask)
+        XCTAssertTrue(mockViewController.didCallShowErrorBanner)
         
         mockInteractor.resetMockInteractorValues()
         
@@ -104,25 +114,47 @@ class TaskFormPresenterTest: XCTestCase {
         testedPresenter.submit()
         XCTAssertFalse(mockInteractor.didCallAddTask)
         XCTAssertNil(mockInteractor.newTask)
+        XCTAssertTrue(mockViewController.didCallShowErrorBanner)
         
         mockInteractor.resetMockInteractorValues()
         
         testedPresenter.setValue(for: 0, with: "Title")
         testedPresenter.setValue(for: 1, with: "Desc")
         testedPresenter.setValue(for: 2, with: "Reminder")
+        testedPresenter.dueDate = Date()
+        testedPresenter.submit()
+        XCTAssertTrue(mockViewController.didCallShowErrorBanner)
+        XCTAssertFalse(mockInteractor.didCallAddTask)
+        XCTAssertNil(mockInteractor.newTask)
+        
+        mockInteractor.resetMockInteractorValues()
+        
+        testedPresenter.dueDate = Date(timeIntervalSinceNow: 30)
         testedPresenter.submit()
         XCTAssertTrue(mockInteractor.didCallAddTask)
         XCTAssertNotNil(mockInteractor.newTask)
         XCTAssertEqual(mockInteractor.newTask?.title, "Title")
         XCTAssertNil(mockInteractor.newTask?.id)
+        
+        mockInteractor.resetMockInteractorValues()
+        testedPresenter.task = Task(id: "some id", title: "some title", description: "some desc", dueDate: Date(timeIntervalSinceNow: 30), reminderText: "some reminder")
+        testedPresenter.submit()
+        XCTAssertFalse(mockInteractor.didCallAddTask)
+        XCTAssertTrue(mockInteractor.didCallEditTask)
+        XCTAssertNotNil(mockInteractor.editedTask)
+        XCTAssertEqual(mockInteractor.editedTask?.title, "some title")
+        XCTAssertNotNil(mockInteractor.editedTask?.id)
+        XCTAssertEqual(mockInteractor.editedTask?.id, "some id")
     }
     
     func testAddTask() {
         testedPresenter.setValue(for: 0, with: "Title")
         testedPresenter.setValue(for: 1, with: "Desc")
         testedPresenter.setValue(for: 2, with: "Reminder")
+        testedPresenter.dueDate = Date(timeIntervalSinceNow: 30)
         testedPresenter.submit()
         XCTAssertTrue(mockViewController.didCallShowLoadingView)
+        XCTAssertTrue(mockInteractor.didCallAddTask)
         
         testedPresenter.taskAddFailed(with: TDError(errorString: "error"))
         XCTAssertTrue(mockViewController.didCallShowErrorBanner)
@@ -130,6 +162,24 @@ class TaskFormPresenterTest: XCTestCase {
         XCTAssertFalse(mockDelegate.didCallPresenterDidFinish)
         
         testedPresenter.taskAddSucceeded()
+        XCTAssertTrue(mockViewController.didCallShowSuccessBanner)
+        XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
+        XCTAssertTrue(mockDelegate.didCallPresenterDidFinish)
+    }
+    
+    func testEditTask() {
+        testedPresenter.task = Task(id: "some id", title: "some title", description: "some desc", dueDate: Date(timeIntervalSinceNow: 30), reminderText: "some reminder")
+        testedPresenter.dueDate = Date(timeIntervalSinceNow: 30)
+        testedPresenter.submit()
+        XCTAssertTrue(mockViewController.didCallShowLoadingView)
+        XCTAssertTrue(mockInteractor.didCallEditTask)
+        
+        testedPresenter.taskEditFailed(with: TDError(errorString: "error"))
+        XCTAssertTrue(mockViewController.didCallShowErrorBanner)
+        XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
+        XCTAssertFalse(mockDelegate.didCallPresenterDidFinish)
+        
+        testedPresenter.taskEditSucceeded()
         XCTAssertTrue(mockViewController.didCallShowSuccessBanner)
         XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
         XCTAssertTrue(mockDelegate.didCallPresenterDidFinish)
