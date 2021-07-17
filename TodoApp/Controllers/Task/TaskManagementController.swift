@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UserNotifications
 
 // MARK: - TaskFormViewController implementation
 class TaskManagementController {
@@ -28,6 +29,44 @@ class TaskManagementController {
         return nil
     }
     
+    private func createNotification(with task: Task) {
+        
+        // create notification content
+        let content = UNMutableNotificationContent()
+        content.title = NSString.localizedUserNotificationString(forKey: task.title, arguments: nil)
+        content.body = NSString.localizedUserNotificationString(forKey: task.reminderText, arguments: nil)
+        content.sound = UNNotificationSound.default
+        
+        
+        
+        // create date component
+        let calender: Calendar = Calendar.current
+        var dateComonents: DateComponents = DateComponents()
+        dateComonents.hour = calender.component(.hour, from: task.dueDate)
+        dateComonents.minute = calender.component(.minute, from: task.dueDate)
+        dateComonents.timeZone = TimeZone.current
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComonents, repeats: false)
+        
+        // create notification request
+        let request = UNNotificationRequest(identifier: task.id ?? "", content: content, trigger: trigger)
+        
+        // schedule the request with system
+        UNUserNotificationCenter.current().add(request) { (error) in
+            if let error = error {
+                print("adding notification error: \(error)")
+            } else {
+                print("successfully added notification")
+            }
+        }
+    }
+    
+    private func deletePendingNotification(with taskId: String) {
+        // remove pending notification
+        let centre = UNUserNotificationCenter.current()
+        centre.removePendingNotificationRequests(withIdentifiers: [taskId])
+    }
+    
     private func taskList(from oldTasks: [Task]?, with newTask: Task) -> TaskList {
         var task: Task = newTask
         var taskArray: [Task] = []
@@ -42,6 +81,7 @@ class TaskManagementController {
         }
         taskArray.append(task)
         
+        createNotification(with: task)
         return TaskList(tasks: taskArray)
     }
     
@@ -142,8 +182,12 @@ class TaskManagementController {
             return
         }
         
+        // remove pending notification
+        deletePendingNotification(with: tasks[index].id ?? "")
         // remove the old task from list
         tasks.remove(at: index)
+        
+        createNotification(with: task)
         // insert the new task
         tasks.insert(task, at: index)
         
@@ -161,6 +205,8 @@ class TaskManagementController {
     
     func deleteTask(with taskId: String, onSuccess: () -> Void,
                     onFail: (TDError) -> Void) {
+        deletePendingNotification(with: taskId)
+        
         guard let taskListData = userDefault.string(forKey: taskListKey) else {
             onFail(TDError(errorString: "TaskList not created yet to be edit"))
             return
