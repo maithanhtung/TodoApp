@@ -9,7 +9,7 @@ import Foundation
 import UserNotifications
 
 // MARK: - TaskFormViewController implementation
-class TaskManagementController {
+class TaskManagementController: NSObject {
     
     private let taskListKey: String = "Task list"
     
@@ -30,33 +30,32 @@ class TaskManagementController {
     }
     
     private func createNotification(with task: Task) {
-        
-        // create notification content
-        let content = UNMutableNotificationContent()
-        content.title = NSString.localizedUserNotificationString(forKey: task.title, arguments: nil)
-        content.body = NSString.localizedUserNotificationString(forKey: task.reminderText, arguments: nil)
-        content.sound = UNNotificationSound.default
-        
-        
-        
-        // create date component
-        let calender: Calendar = Calendar.current
-        var dateComonents: DateComponents = DateComponents()
-        dateComonents.hour = calender.component(.hour, from: task.dueDate)
-        dateComonents.minute = calender.component(.minute, from: task.dueDate)
-        dateComonents.timeZone = TimeZone.current
-        
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComonents, repeats: false)
-        
-        // create notification request
-        let request = UNNotificationRequest(identifier: task.id ?? "", content: content, trigger: trigger)
-        
-        // schedule the request with system
-        UNUserNotificationCenter.current().add(request) { (error) in
-            if let error = error {
-                print("adding notification error: \(error)")
-            } else {
-                print("successfully added notification")
+        if task.taskStatus == .active {
+            // create notification content
+            let content = UNMutableNotificationContent()
+            content.title = NSString.localizedUserNotificationString(forKey: task.title, arguments: nil)
+            content.body = NSString.localizedUserNotificationString(forKey: task.reminderText, arguments: nil)
+            content.sound = UNNotificationSound.default
+            
+            // create date component
+            let calendar: Calendar = Calendar.current
+            var dateComponents: DateComponents = DateComponents()
+            dateComponents.hour = calendar.component(.hour, from: task.dueDate)
+            dateComponents.minute = calendar.component(.minute, from: task.dueDate)
+            dateComponents.timeZone = TimeZone.current
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+            
+            // create notification request
+            let request = UNNotificationRequest(identifier: task.id ?? "", content: content, trigger: trigger)
+            
+            // schedule the request with system
+            UNUserNotificationCenter.current().add(request) { (error) in
+                if let error = error {
+                    print("adding notification error: \(error)")
+                } else {
+                    print("successfully added notification")
+                }
             }
         }
     }
@@ -67,7 +66,8 @@ class TaskManagementController {
         centre.removePendingNotificationRequests(withIdentifiers: [taskId])
     }
     
-    private func taskList(from oldTasks: [Task]?, with newTask: Task) -> TaskList {
+    // use when adding a new Task
+    private func newTaskList(from oldTasks: [Task]?, with newTask: Task) -> TaskList {
         var task: Task = newTask
         var taskArray: [Task] = []
         
@@ -100,7 +100,12 @@ class TaskManagementController {
             onFail(TDError(errorString: "Unable to unarchived task list Json string"))
             return
         }
-        onSuccess(list)
+        
+        // if due date <= Date() -> over due
+        var newList: TaskList = list
+        newList.tasks = list.tasks.map({$0.dueDate >= Date() ? $0 : Task(id: $0.id, title: $0.title, description: $0.description, dueDate: $0.dueDate, reminderText: $0.reminderText, taskStatus: .overdue)})
+        
+        onSuccess(newList)
     }
     
     func fetchTask(taskId: String, onSuccess: @escaping (Task) -> Void,
@@ -120,8 +125,10 @@ class TaskManagementController {
             onFail(TDError(errorString: "Task not found!"))
             return
         }
+        var updatedTask: Task = task
+        updatedTask.updateTaskStatus()
         
-        onSuccess(task)
+        onSuccess(updatedTask)
     }
     
     func addTask(with newTask: Task, onSuccess: () -> Void,
@@ -129,7 +136,7 @@ class TaskManagementController {
         // get Task List Json string from local
         guard let taskListData = userDefault.string(forKey: taskListKey) else {
             // first time - create new Task List
-            let newTaskList: TaskList = taskList(from: nil, with: newTask)
+            let newTaskList: TaskList = newTaskList(from: nil, with: newTask)
             // encode to Json String with new TaskList
             guard let newTaskListEncodeString = encodedData(with: newTaskList) else {
                 onFail(TDError(errorString: "Unable to encode"))
@@ -148,7 +155,7 @@ class TaskManagementController {
         }
         
         // create new taskList base on old Task list with new Task
-        let newTaskList: TaskList = taskList(from: oldList.tasks, with: newTask)
+        let newTaskList: TaskList = newTaskList(from: oldList.tasks, with: newTask)
         
         // encode to Json String with new TaskList
         guard let newTaskListEncodeString = encodedData(with: newTaskList) else {

@@ -135,9 +135,11 @@ class TaskFormPresenterTest: XCTestCase {
         XCTAssertNotNil(mockInteractor.newTask)
         XCTAssertEqual(mockInteractor.newTask?.title, "Title")
         XCTAssertNil(mockInteractor.newTask?.id)
+        XCTAssertEqual(mockInteractor.newTask?.taskStatus, .active)
         
         mockInteractor.resetMockInteractorValues()
-        testedPresenter.task = Task(id: "some id", title: "some title", description: "some desc", dueDate: Date(timeIntervalSinceNow: 30), reminderText: "some reminder")
+        testedPresenter.task = Task(id: "some id", title: "some title", description: "some desc", dueDate: Date(timeIntervalSinceNow: 30), reminderText: "some reminder", taskStatus: .done)
+        testedPresenter.taskStatus = .done
         testedPresenter.submit()
         XCTAssertFalse(mockInteractor.didCallAddTask)
         XCTAssertTrue(mockInteractor.didCallEditTask)
@@ -145,6 +147,7 @@ class TaskFormPresenterTest: XCTestCase {
         XCTAssertEqual(mockInteractor.editedTask?.title, "some title")
         XCTAssertNotNil(mockInteractor.editedTask?.id)
         XCTAssertEqual(mockInteractor.editedTask?.id, "some id")
+        XCTAssertEqual(mockInteractor.editedTask?.taskStatus, .done)
     }
     
     func testAddTask() {
@@ -170,6 +173,7 @@ class TaskFormPresenterTest: XCTestCase {
     func testEditTask() {
         testedPresenter.task = Task(id: "some id", title: "some title", description: "some desc", dueDate: Date(timeIntervalSinceNow: 30), reminderText: "some reminder")
         testedPresenter.dueDate = Date(timeIntervalSinceNow: 30)
+        testedPresenter.taskStatus = .done
         testedPresenter.submit()
         XCTAssertTrue(mockViewController.didCallShowLoadingView)
         XCTAssertTrue(mockInteractor.didCallEditTask)

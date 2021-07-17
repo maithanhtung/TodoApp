@@ -40,6 +40,13 @@ class LoginViewController: UIViewController {
         setupView()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // set notification delegate to current appear view
+        UNUserNotificationCenter.current().delegate = self
+    }
+    
     private func setupView() {
         view.backgroundColor = UIColor(named: "viewBackgroundColor")
         view.addSubview(welcomeLabel)
@@ -95,6 +102,13 @@ class LoginViewController: UIViewController {
         rootNav.modalPresentationStyle = .fullScreen
         
         present(rootNav, animated: false, completion: nil)
+    }
+}
+
+// MARK: - UNUserNotificationCenterDelegate implementation
+extension LoginViewController: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .list, .sound])
     }
 }
 

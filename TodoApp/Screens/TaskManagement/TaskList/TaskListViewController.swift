@@ -41,6 +41,13 @@ class TaskListViewController: BaseViewController {
         presenter.viewIsReady()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // set notification delegate to current appear view
+        UNUserNotificationCenter.current().delegate = self
+    }
+    
     private lazy var collectionViewLayout: UICollectionViewFlowLayout = {
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -111,6 +118,7 @@ extension TaskListViewController: UICollectionViewDelegate, UICollectionViewData
             
             cell.title = dateFormatter.string(from: item.dueDate)
             cell.subTitle = item.title
+            cell.taskStatus = item.taskStatus
             cell.cellStyle = .selectionCell
         }
         
@@ -127,6 +135,18 @@ extension TaskListViewController: UICollectionViewDelegate, UICollectionViewData
 extension TaskListViewController: TaskListViewControllerProtocol {
     func refreshView() {
         collectionView.reloadData()
+    }
+}
+
+// MARK: - UNUserNotificationCenterDelegate implementation
+extension TaskListViewController: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        // Update UI after 0.5 sec delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+            self?.presenter.viewIsReady()
+        })
+        completionHandler([.banner, .list, .sound])
     }
 }
 

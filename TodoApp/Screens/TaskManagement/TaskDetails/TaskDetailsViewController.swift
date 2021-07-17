@@ -39,11 +39,17 @@ class TaskDetailsViewController: BaseViewController {
         
         // custom back button
         self.navigationItem.hidesBackButton = true
-            
         let newBackButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(back))
         self.navigationItem.leftBarButtonItem = newBackButton
         
         setupView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // set notification delegate to current appear view
+        UNUserNotificationCenter.current().delegate = self
     }
     
     @objc func back() {
@@ -121,6 +127,15 @@ class TaskDetailsViewController: BaseViewController {
         return view
     }()
     
+    private lazy var taskStatusView: CCCellView = {
+        let view: CCCellView = CCCellView()
+        view.title = "Status"
+        view.subTitle = presenter.task.taskStatus.statusString
+        view.subTitleTextColor = presenter.task.taskStatus.textColor
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var deleteButton: CCButton = {
         let button: CCButton = CCButton()
         
@@ -142,6 +157,8 @@ class TaskDetailsViewController: BaseViewController {
         contentView.addArrangedSubview(dueDateView)
         contentView.addArrangedSubview(createDividerLine())
         contentView.addArrangedSubview(reminderView)
+        contentView.addArrangedSubview(createDividerLine())
+        contentView.addArrangedSubview(taskStatusView)
         
         scrollView.addSubview(contentView)
         scrollView.addSubview(deleteButton)
@@ -192,6 +209,7 @@ class TaskDetailsViewController: BaseViewController {
     }
 }
 
+// MARK: - TaskDetailsViewControllerProtocol implementation
 extension TaskDetailsViewController: TaskDetailsViewControllerProtocol {
     func refreshView() {
         titleView.subTitle = presenter.task.title
@@ -202,5 +220,21 @@ extension TaskDetailsViewController: TaskDetailsViewControllerProtocol {
         dueDateView.subTitle = dateFormatter.string(from: presenter.task.dueDate)
         
         reminderView.subTitle = presenter.task.reminderText
+        
+        taskStatusView.subTitle = presenter.task.taskStatus.statusString
+        taskStatusView.subTitleTextColor = presenter.task.taskStatus.textColor
+    }
+}
+
+// MARK: - UNUserNotificationCenterDelegate implementation
+extension TaskDetailsViewController: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
+        // Update UI after 0.5 sec delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: { [weak self] in
+            self?.presenter.fetchUpdateTask()
+        })
+        
+        completionHandler([.banner, .list, .sound])
     }
 }
