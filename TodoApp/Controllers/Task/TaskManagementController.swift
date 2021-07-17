@@ -101,9 +101,9 @@ class TaskManagementController: NSObject {
             return
         }
         
-        // if due date <= Date() -> over due
+        // if dueDate <= Date() && taskStatus == .active -> over due
         var newList: TaskList = list
-        newList.tasks = list.tasks.map({$0.dueDate >= Date() ? $0 : Task(id: $0.id, title: $0.title, description: $0.description, dueDate: $0.dueDate, reminderText: $0.reminderText, taskStatus: .overdue)})
+        newList.tasks = list.tasks.map({$0.dueDate > Date() || $0.taskStatus == .done ? $0 : Task(id: $0.id, title: $0.title, description: $0.description, dueDate: $0.dueDate, reminderText: $0.reminderText, taskStatus: .overdue)})
         
         onSuccess(newList)
     }

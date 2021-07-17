@@ -233,6 +233,11 @@ extension TaskFormViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         presenter.setValue(for: textField.tag, with: textField.text)
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return false
+    }
 }
 
 // MARK: - PickerViewControllerDelegate implementation
