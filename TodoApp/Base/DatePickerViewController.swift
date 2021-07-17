@@ -46,6 +46,8 @@ class DatePickerViewController: BaseViewController {
         view.backgroundColor = .lightGray
         view.alpha = 0.2
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:))))
         
         return view
     }()
@@ -127,6 +129,13 @@ class DatePickerViewController: BaseViewController {
         containerViewBottomConstraint = containerView.bottomAnchor.constraint(equalTo: view.availableGuide.bottomAnchor, constant: 0)
         
         containerViewBottomConstraint?.isActive = true
+    }
+    
+    // dismiss view when tap out side the calendar
+    @objc func handleTap(sender: UITapGestureRecognizer? = nil) {
+        if sender?.state == .ended {
+            self.dismiss(animated: true)
+        }
     }
 }
 

@@ -26,6 +26,8 @@ protocol TaskFormPresenterProtocol: NSObject {
     
     var dueDate: Date? { get set }
     
+    var task: Task? { get set }
+    
     init(interactor: TaskFormInteractorProtocol, delegate: TaskFormPresenterDelegate)
     
     func setValue(for field: TaskFormInputFields.RawValue, with value: String?)
@@ -52,6 +54,16 @@ class TaskFormPresenter: NSObject, TaskFormPresenterProtocol {
         }
     }
     
+    var task: Task? {
+        didSet {
+            if let task = task {
+                self.taskTitle = task.title
+                self.taskDesc = task.description
+                self.taskReminder = task.reminderText
+            }
+        }
+    }
+
     required init(interactor: TaskFormInteractorProtocol, delegate: TaskFormPresenterDelegate) {
         self.interactor = interactor
         self.delegate = delegate
@@ -86,16 +98,31 @@ class TaskFormPresenter: NSObject, TaskFormPresenterProtocol {
             return
         }
         
-        let newTask: Task = Task(title: taskTitle, description: taskDesc, dueDate: dueDate, reminderText: taskReminder)
+        let newTask: Task = Task(id: task?.id, title: taskTitle, description: taskDesc, dueDate: dueDate, reminderText: taskReminder)
         
         viewController?.showLoadingView()
-        interactor.addTask(with: newTask)
+        if task == nil {
+            interactor.addTask(with: newTask)
+        } else {
+            interactor.editTask(with: newTask)
+        }
     }
     
 }
 
 // MARK: - TaskFormInteractor delegate
 extension TaskFormPresenter: TaskFormInteractorDelegate {
+    func taskEditSucceeded() {
+        viewController?.showSuccessBanner(with: "Edit task successfully")
+        delegate.presenterDidFinish()
+        viewController?.dissmissLoadingView()
+    }
+    
+    func taskEditFailed(with error: TDError) {
+        viewController?.showErrorBanner(with: error.errorString)
+        viewController?.dissmissLoadingView()
+    }
+    
     func taskAddSucceeded() {
         viewController?.showSuccessBanner(with: "Add task successfully")
         delegate.presenterDidFinish()

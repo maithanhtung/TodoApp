@@ -64,12 +64,14 @@ extension TaskListRouter: TaskListPresenterDelegate {
     }
 }
 
+// MARK: - TaskFormRouter delegate
 extension TaskListRouter: TaskFormRouterDelegate {
     func taskFormRouterDidFinish() {
         presenter?.viewIsReady()
     }
 }
 
+// MARK: - TaskDetailsRouter delegate
 extension TaskListRouter: TaskDetailsRouterDelegate {
     func taskDetailsRouterDidFinish() {
         presenter?.viewIsReady()

@@ -33,9 +33,22 @@ private class MockInteractor: NSObject, TaskDetailsInteractorProtocol {
         didCallDeleteTask = true
         taskToDelete = task
     }
+    
+    var didCallFetchTask: Bool = false
+    var taskIdForFetching: String?
+    func fetchTask(taskId: String) {
+        didCallFetchTask = true
+        taskIdForFetching = taskId
+    }
 }
 
 private class MockViewController: NSObject, TaskDetailsViewControllerProtocol {
+    
+    var didCallRefreshView: Bool = false
+    func refreshView() {
+        didCallRefreshView = true
+    }
+    
     var didCallShowSuccessBanner: Bool = false
     func showSuccessBanner(with message: String) {
         didCallShowSuccessBanner = true
@@ -61,6 +74,7 @@ private class MockViewController: NSObject, TaskDetailsViewControllerProtocol {
         didCallDissmissLoadingView = false
         didCallShowSuccessBanner = false
         didCallShowErrorBanner = false
+        didCallRefreshView = false
     }
 }
 
@@ -99,6 +113,7 @@ class TaskDetailsPresenterTest: XCTestCase {
         XCTAssertEqual(mockInteractor.taskToDelete?.id,"test id")
         
         testedPresenter.deleteTaskFailed(with: TDError(errorString: "error"))
+        XCTAssertFalse(mockDelegate.didCallPresenterFinish)
         XCTAssertTrue(mockViewController.didCallShowErrorBanner)
         XCTAssertFalse(mockViewController.didCallShowSuccessBanner)
         XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
@@ -106,9 +121,20 @@ class TaskDetailsPresenterTest: XCTestCase {
         mockViewController.resetMockViewControllerValues()
         
         testedPresenter.deleteTaskSucceeded()
+        XCTAssertTrue(mockDelegate.didCallPresenterFinish)
         XCTAssertFalse(mockViewController.didCallShowErrorBanner)
         XCTAssertTrue(mockViewController.didCallShowSuccessBanner)
         XCTAssertTrue(mockViewController.didCallDissmissLoadingView)
+    }
+    
+    func testUpdateTask() {
+        testedPresenter = TaskDetailsPresenter(interactor: mockInteractor, delegate: mockDelegate, task: Task(id: nil, title: "test title", description: "test desc", dueDate: Date(), reminderText: "test reminder text"))
+        testedPresenter.fetchUpdateTask()
+        XCTAssertFalse(mockInteractor.didCallFetchTask)
+        
+        testedPresenter = TaskDetailsPresenter(interactor: mockInteractor, delegate: mockDelegate, task: Task(id: "test id", title: "test title", description: "test desc", dueDate: Date(), reminderText: "test reminder text"))
+        testedPresenter.fetchUpdateTask()
+        XCTAssertTrue(mockInteractor.didCallFetchTask)
     }
     
 }
