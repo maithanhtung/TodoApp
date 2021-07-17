@@ -1,19 +1,40 @@
 //
-//  DatePickerViewController.swift
+//  PickerViewController.swift
 //  TodoApp
 //
 //  Created by Mai Thanh Tung on 16.7.2021.
 //
 import UIKit
-protocol DatePickerViewControllerDelegate: AnyObject {
-    func didSelectDate(date: Date)
+
+@objc enum PickerViewControllerStyle: Int, CaseIterable {
+    case datePicker = 0,
+         selectionPicker
 }
 
-class DatePickerViewController: BaseViewController {
+protocol PickerViewControllerDelegate: AnyObject {
+    func didSelectDate(date: Date)
     
-    weak var delegate: DatePickerViewControllerDelegate?
+    func didSelectCell(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    
+    func rowTitlePickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+}
+
+class PickerViewController: BaseViewController {
+    
+    weak var delegate: PickerViewControllerDelegate?
     var containerViewBottomConstraint: NSLayoutConstraint?
     var containerViewDefaultHeight: CGFloat = 0.0
+    var style: PickerViewControllerStyle
+    var pickerViewDataSource: UIPickerViewDataSource?
+    
+    required init(style: PickerViewControllerStyle) {
+        self.style = style
+        super.init(nibName: .none, bundle: .none)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -32,14 +53,30 @@ class DatePickerViewController: BaseViewController {
         datePickerView.datePickerMode = .dateAndTime
         datePickerView.preferredDatePickerStyle = .wheels
         datePickerView.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        datePickerView.setValue(UIColor.black, forKeyPath: "textColor")
         datePickerView.translatesAutoresizingMaskIntoConstraints = false
         
         return datePickerView
     }()
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker){
-        delegate?.didSelectDate(date: sender.date)
+        // set new date that start with 0 sec
+        let calendar: Calendar = Calendar.current
+        var dateComponents: DateComponents = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: sender.date)
+        dateComponents.setValue(0, for: .second)
+        
+        delegate?.didSelectDate(date: calendar.date(from: dateComponents) ?? sender.date)
     }
+    
+    private lazy var selectionView: UIPickerView = {
+        let pickerView: UIPickerView = UIPickerView()
+        pickerView.delegate = self
+        pickerView.dataSource = pickerViewDataSource
+        pickerView.translatesAutoresizingMaskIntoConstraints = false
+        pickerView.setValue(UIColor.black, forKeyPath: "textColor")
+        
+        return pickerView
+    }()
     
     private lazy var dimmedView: UIView = {
         let view = UIView()
@@ -51,13 +88,12 @@ class DatePickerViewController: BaseViewController {
         
         return view
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPanGesture()
         view.backgroundColor = .clear
         setupView()
-        setupConstraints()
     }
     
     func setupPanGesture() {
@@ -66,11 +102,11 @@ class DatePickerViewController: BaseViewController {
         panGesture.delaysTouchesEnded = false
         view.addGestureRecognizer(panGesture)
     }
-
+    
     @objc func handleDragAction(gesture: UIPanGestureRecognizer) {
         let maxContainerHeight: CGFloat = containerViewDefaultHeight - 20
         let minContainerHeight: CGFloat = containerViewDefaultHeight - 40
-
+        
         let translation = gesture.translation(in: view)
         
         // Calculate new height base on dragging
@@ -97,9 +133,15 @@ class DatePickerViewController: BaseViewController {
     }
     
     func setupView() {
-        containerView.addSubview(datePickerView)
+        if style == .datePicker {
+            containerView.addSubview(datePickerView)
+        } else {
+            containerView.addSubview(selectionView)
+        }
         view.addSubview(dimmedView)
         view.addSubview(containerView)
+        
+        setupConstraints()
     }
     
     func setupConstraints() {
@@ -118,13 +160,24 @@ class DatePickerViewController: BaseViewController {
             
             containerView.leadingAnchor.constraint(equalTo: view.availableGuide.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.availableGuide.trailingAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: containerViewDefaultHeight),
-            
-            datePickerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            datePickerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            datePickerView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            datePickerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            containerView.heightAnchor.constraint(equalToConstant: containerViewDefaultHeight)
         ])
+        
+        if style == .datePicker {
+            NSLayoutConstraint.activate([
+                datePickerView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                datePickerView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                datePickerView.topAnchor.constraint(equalTo: containerView.topAnchor),
+                datePickerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                selectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+                selectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+                selectionView.topAnchor.constraint(equalTo: containerView.topAnchor),
+                selectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            ])
+        }
         
         containerViewBottomConstraint = containerView.bottomAnchor.constraint(equalTo: view.availableGuide.bottomAnchor, constant: 0)
         
@@ -136,6 +189,17 @@ class DatePickerViewController: BaseViewController {
         if sender?.state == .ended {
             self.dismiss(animated: true)
         }
+    }
+}
+
+// MARK: - UIPickerViewDelegate implementation
+extension PickerViewController: UIPickerViewDelegate {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        delegate?.didSelectCell(pickerView, didSelectRow: row, inComponent: component)
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        delegate?.rowTitlePickerView(pickerView, titleForRow: row, forComponent: component)
     }
 }
 

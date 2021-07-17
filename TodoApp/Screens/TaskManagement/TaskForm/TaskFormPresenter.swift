@@ -13,6 +13,12 @@ enum TaskFormInputFields: Int, CaseIterable {
          reminderInput
 }
 
+enum TaskFormSelectionCell: Int, CaseIterable {
+    case dueDateSelection = 0,
+         statusSelection
+}
+
+
 // MARK: - TaskFormPresenterDelegate declaration
 protocol TaskFormPresenterDelegate: AnyObject {
     func presenterDidFinish()
@@ -25,6 +31,8 @@ protocol TaskFormPresenterProtocol: NSObject {
     var viewController: TaskFormViewControllerProtocol? { get set }
     
     var dueDate: Date? { get set }
+    
+    var taskStatus: TaskStatus? { get set }
     
     var task: Task? { get set }
     
@@ -47,6 +55,12 @@ class TaskFormPresenter: NSObject, TaskFormPresenterProtocol {
     private var taskTitle: String?
     private var taskDesc: String?
     private var taskReminder: String?
+    
+    var taskStatus: TaskStatus? {
+        didSet {
+            viewController?.refreshView()
+        }
+    }
     
     var dueDate: Date? {
         didSet {
@@ -98,7 +112,12 @@ class TaskFormPresenter: NSObject, TaskFormPresenterProtocol {
             return
         }
         
-        let newTask: Task = Task(id: task?.id, title: taskTitle, description: taskDesc, dueDate: dueDate, reminderText: taskReminder)
+        if let taskStatus = taskStatus, taskStatus == .overdue {
+            viewController?.showErrorBanner(with: "Can't set task over due")
+            return
+        }
+        
+        let newTask: Task = Task(id: task?.id, title: taskTitle, description: taskDesc, dueDate: dueDate, reminderText: taskReminder, taskStatus: taskStatus ?? .active)
         
         viewController?.showLoadingView()
         if task == nil {

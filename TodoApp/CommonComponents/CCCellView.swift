@@ -39,6 +39,21 @@ class CCCellView: UIView {
         }
     }
     
+    var subTitleTextColor: UIColor? = UIColor(named: "labelColor") {
+        didSet {
+            subTitleLabel.textColor = subTitleTextColor
+        }
+    }
+    
+    var taskStatus: TaskStatus? {
+        didSet {
+            if let taskStatus = taskStatus {
+                statusLabel.text = taskStatus.statusString
+                statusLabel.textColor = taskStatus.textColor
+            }
+        }
+    }
+    
     var style: CCCellViewStyle = .normalCell {
         didSet {
             iconImageView.removeFromSuperview()
@@ -65,6 +80,14 @@ class CCCellView: UIView {
 
         return label
     }()
+    
+    private lazy var statusLabel: CCLabel = {
+        let label: CCLabel = CCLabel()
+        label.font = CCFont.subTitleFont
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
 
     private lazy var iconImageView: UIImageView = {
         let imageView: UIImageView = UIImageView()
@@ -83,6 +106,7 @@ class CCCellView: UIView {
         }
         addSubview(titleLabel)
         addSubview(subTitleLabel)
+        addSubview(statusLabel)
         
         setupConstraints(style: style)
     }
@@ -98,7 +122,10 @@ class CCCellView: UIView {
 
                 subTitleLabel.leadingAnchor.constraint(equalTo: availableGuide.leadingAnchor, constant: CCMargin.large),
                 subTitleLabel.bottomAnchor.constraint(equalTo: availableGuide.bottomAnchor, constant: -CCMargin.small),
-                subTitleLabel.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.large*2)
+                
+                statusLabel.centerYAnchor.constraint(equalTo: availableGuide.centerYAnchor),
+                statusLabel.leadingAnchor.constraint(greaterThanOrEqualTo: subTitleLabel.trailingAnchor, constant: CCMargin.large*2),
+                statusLabel.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.x_large*2)
             ])
         case .selectionCell:
             NSLayoutConstraint.activate([
@@ -110,10 +137,13 @@ class CCCellView: UIView {
                 subTitleLabel.bottomAnchor.constraint(equalTo: availableGuide.bottomAnchor, constant: -CCMargin.small),
                 
                 iconImageView.trailingAnchor.constraint(equalTo: availableGuide.trailingAnchor, constant: -CCMargin.large),
-                iconImageView.leadingAnchor.constraint(greaterThanOrEqualTo: subTitleLabel.trailingAnchor, constant: CCMargin.large),
                 iconImageView.centerYAnchor.constraint(equalTo: availableGuide.centerYAnchor),
                 iconImageView.widthAnchor.constraint(equalToConstant: 10),
                 iconImageView.heightAnchor.constraint(equalToConstant: 10),
+                
+                statusLabel.centerYAnchor.constraint(equalTo: availableGuide.centerYAnchor),
+                statusLabel.leadingAnchor.constraint(greaterThanOrEqualTo: subTitleLabel.trailingAnchor, constant: CCMargin.small),
+                statusLabel.trailingAnchor.constraint(equalTo: iconImageView.leadingAnchor, constant: -CCMargin.small)
             ])
         }
         

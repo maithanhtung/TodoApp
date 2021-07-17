@@ -37,6 +37,13 @@ class TaskFormViewController: BaseViewController {
         setupView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // set notification delegate to current appear view
+        UNUserNotificationCenter.current().delegate = self
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         scrollView.contentSize = CGSize(width: contentView.frame.width, height: contentView.frame.height)
@@ -96,6 +103,7 @@ class TaskFormViewController: BaseViewController {
             
             dueDatePickerView.subTitle = dateFormatter.string(from: dueDate)
         }
+        dueDatePickerView.tag = TaskFormSelectionCell.dueDateSelection.rawValue
         dueDatePickerView.isUserInteractionEnabled = true
         dueDatePickerView.addGestureRecognizer(createTapRecognizer())
         
@@ -112,6 +120,21 @@ class TaskFormViewController: BaseViewController {
         inputView.inputTag = TaskFormInputFields.reminderInput.rawValue
         inputView.translatesAutoresizingMaskIntoConstraints = false
         return inputView
+    }()
+    
+    private lazy var taskStatusPickerView: CCCellView = {
+        let taskStatusPickerView: CCCellView = CCCellView(style: .selectionCell)
+        taskStatusPickerView.title = "Status"
+        if let status = presenter.taskStatus {
+            taskStatusPickerView.subTitle = status.statusString
+            taskStatusPickerView.subTitleTextColor = status.textColor
+        }
+        taskStatusPickerView.tag = TaskFormSelectionCell.statusSelection.rawValue
+        taskStatusPickerView.translatesAutoresizingMaskIntoConstraints = false
+        taskStatusPickerView.isUserInteractionEnabled = true
+        taskStatusPickerView.addGestureRecognizer(createTapRecognizer())
+        
+        return taskStatusPickerView
     }()
     
     private lazy var submitButton: CCButton = {
@@ -137,6 +160,10 @@ class TaskFormViewController: BaseViewController {
         contentView.addArrangedSubview(taskDescInputView)
         contentView.addArrangedSubview(dueDatePickerView)
         contentView.addArrangedSubview(taskReminderInputView)
+        
+        if presenter.task != nil {
+            contentView.addArrangedSubview(taskStatusPickerView)
+        }
         
         scrollView.addSubview(contentView)
         scrollView.addSubview(submitButton)
@@ -169,11 +196,16 @@ class TaskFormViewController: BaseViewController {
     }
     
     @objc func handleTap(sender: UITapGestureRecognizer? = nil) {
-        if let nav = navigationController, sender?.state == .ended {
-            let datePickerVC: DatePickerViewController = DatePickerViewController()
-            datePickerVC.delegate = self
+        if let nav = navigationController, let sender = sender, sender.state == .ended, let item = sender.view as? CCCellView {
+            var style: PickerViewControllerStyle = .selectionPicker
+            if item.tag == TaskFormSelectionCell.dueDateSelection.rawValue {
+                style = .datePicker
+            }
+            let pickerVC: PickerViewController = PickerViewController(style: style)
+            pickerVC.delegate = self
+            pickerVC.pickerViewDataSource = self
             nav.modalPresentationStyle = .popover
-            nav.present(datePickerVC, animated: true, completion: nil)
+            nav.present(pickerVC, animated: true, completion: nil)
         }
     }
     
@@ -188,6 +220,11 @@ extension TaskFormViewController: TaskFormViewControllerProtocol {
             
             dueDatePickerView.subTitle = dateFormatter.string(from: dueDate)
         }
+        
+        if let status = presenter.taskStatus {
+            taskStatusPickerView.subTitle = status.statusString
+            taskStatusPickerView.subTitleTextColor = status.textColor
+        }
     }
 }
 
@@ -198,9 +235,44 @@ extension TaskFormViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - DatePickerViewControllerDelegate implementation
-extension TaskFormViewController: DatePickerViewControllerDelegate {
+// MARK: - PickerViewControllerDelegate implementation
+extension TaskFormViewController: PickerViewControllerDelegate {
+    func rowTitlePickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        let taskArray: [String] = [TaskStatus.active.statusString, TaskStatus.done.statusString]
+        return taskArray[row]
+    }
+    
+    func didSelectCell(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        switch row {
+        case TaskStatus.active.rawValue:
+            presenter.taskStatus = .active
+        case TaskStatus.done.rawValue:
+            presenter.taskStatus = .done
+        case TaskStatus.overdue.rawValue:
+            presenter.taskStatus = .overdue
+        default:
+            return
+        }
+    }
+    
     func didSelectDate(date: Date) {
         presenter.dueDate = date
+    }
+}
+
+// MARK: - UIPickerViewDataSource implementation
+extension TaskFormViewController: UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 2
+    }
+}
+
+// MARK: - UNUserNotificationCenterDelegate implementation
+extension TaskFormViewController: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .list, .sound])
     }
 }

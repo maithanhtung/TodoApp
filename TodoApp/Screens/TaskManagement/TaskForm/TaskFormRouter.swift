@@ -42,6 +42,7 @@ class TaskFormRouter: NSObject, TaskFormRouterProtocol {
         if let editingTask = editingTask {
             presenter.task = editingTask
             presenter.dueDate = editingTask.dueDate
+            presenter.taskStatus = editingTask.taskStatus
         }
         let controller = TaskFormViewController(presenter: presenter)
         

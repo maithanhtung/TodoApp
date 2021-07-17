@@ -44,6 +44,14 @@ class CCCell: UICollectionViewCell {
         }
     }
     
+    var taskStatus: TaskStatus? {
+        didSet {
+            if let taskStatus = taskStatus {
+                innerView.taskStatus = taskStatus
+            }
+        }
+    }
+    
     func setup(with innerView: UIView) {
         contentView.addSubview(innerView)
         innerView.translatesAutoresizingMaskIntoConstraints = false
