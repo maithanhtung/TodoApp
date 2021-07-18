@@ -191,7 +191,6 @@
 		0831B598269A370700964905 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				0831B59E269A376000964905 /* Setting */,
 				0831B59D269A375A00964905 /* Login */,
 				0831B59C269A374B00964905 /* TaskManagement */,
 			);
@@ -223,13 +222,6 @@
 				0831B586269A35F500964905 /* LoginViewController.swift */,
 			);
 			path = Login;
-			sourceTree = "<group>";
-		};
-		0831B59E269A376000964905 /* Setting */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Setting;
 			sourceTree = "<group>";
 		};
 		0831B59F269A377B00964905 /* TaskForm */ = {
